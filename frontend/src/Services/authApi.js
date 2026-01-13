@@ -37,3 +37,24 @@ export const logoutUser = async () => {
     const response = await api.post('/users/logout');
     return response.data;
 }
+
+
+export const getUserProfile = async () => {
+    const response = await api.get('/users/profile');
+    return response.data;
+}
+
+export const sendVerificationEmail = async () => {
+    const response = await api.post('/users/send-verification-email');
+    return response.data;
+}
+
+export const verifyEmailToken = async ({ email, token }) => {
+    const response = await api.post('/users/verify-email-token', { email, token });
+    return response.data;
+}
+
+export const resendVerificationEmail = async (email) => {
+    const response = await api.post('/users/resend-verification-email', { email });
+    return response.data;
+}

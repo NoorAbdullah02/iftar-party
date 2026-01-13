@@ -3,14 +3,18 @@ import RegisterPage from './Pages/RegisterPage.jsx'
 import LoginPage from './Pages/LoginPage.jsx'
 import Dashboard from './Pages/Dashboard.jsx'
 import ProfilePage from './Pages/ProfilePage.jsx'
+import VerifyEmailToken from './Pages/VerifyEmailToken.jsx'
 import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx'
 import { Toaster } from 'react-hot-toast';
 import Header from './Components/Header.jsx'
+import AfterRegister from './Pages/AfterRegister.jsx'
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const App = () => {
 
   const { isLoggedIn } = useAuth();
+
 
   return (
     <>
@@ -22,7 +26,10 @@ const App = () => {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/verify-email-token" element={<VerifyEmailToken />} />
             <Route path="/" element={<Dashboard />} />
+            <Route path="/after-register" element={<AfterRegister />} />
+            <Route path="*" element={<Navigate to="/" />} />
 
           </Routes>
         </main>

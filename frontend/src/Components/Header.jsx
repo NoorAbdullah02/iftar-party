@@ -113,7 +113,7 @@ const Header = () => {
                                             {/* Menu Items */}
                                             <div className="p-3 space-y-2">
                                                 <Link
-                                                    to="/settings"
+                                                    to="/profile"
                                                     onClick={() => setProfileMenuOpen(false)}
                                                     className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-blue-100 rounded-xl transition-all group"
                                                 >

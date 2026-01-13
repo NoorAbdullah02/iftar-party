@@ -1,6 +1,8 @@
 import express from 'express';
 import { env } from './config/env';
 import cors from 'cors';
+import requestIp from 'request-ip';
+
 import userRoute from './routes/userRoute';
 
 import cookieParser from "cookie-parser";
@@ -14,10 +16,20 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // default to local dev
-    credentials: true
+    origin: (origin, callback) => {
+        // Allow if no origin (server-to-server / same-origin) or in development allow all origins
+        if (!origin) return callback(null, true);
+        if (env.NODE_ENV === 'production') {
+            if (origin === env.FRONTEND_URL) return callback(null, true);
+            return callback(new Error('Not allowed by CORS'));
+        }
+        // in development allow all (use withCredentials for cookies)
+        return callback(null, true);
+    },
+    credentials: true,
 }));
 app.use(cookieParser());
+app.use(requestIp.mw());
 
 app.get('/check', (req, res) => {
     res.json({

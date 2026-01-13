@@ -96,7 +96,7 @@ const RegisterPage = () => {
             setPassword('');
             setConfirmPassword('');
 
-            navigate('/login');
+            navigate('/after-register');
 
         } catch (err) {
             const errorMessage = err.response?.data?.message || 'Registration failed. Please try again.';
@@ -163,10 +163,10 @@ const RegisterPage = () => {
                                         onChange={handleEmailChange}
                                         placeholder="Enter your email"
                                         className={`w-full pl-12 pr-12 py-3 bg-gray-50 border-2 rounded-lg focus:outline-none focus:bg-white transition-all duration-300 ${emailError
-                                                ? 'border-red-500 focus:border-red-600'
-                                                : isEmailValid
-                                                    ? 'border-green-500 focus:border-green-600'
-                                                    : 'border-gray-200 focus:border-indigo-500'
+                                            ? 'border-red-500 focus:border-red-600'
+                                            : isEmailValid
+                                                ? 'border-green-500 focus:border-green-600'
+                                                : 'border-gray-200 focus:border-indigo-500'
                                             }`}
                                         required
                                     />
