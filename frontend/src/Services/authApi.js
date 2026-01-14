@@ -58,3 +58,25 @@ export const resendVerificationEmail = async (email) => {
     const response = await api.post('/users/resend-verification-email', { email });
     return response.data;
 }
+
+export const updateUserName = async ({ name }) => {
+
+    const response = await api.put('/users/update-name', { name });
+    return response.data;
+
+}
+
+export const updateUserPassword = async ({ currentPassword, newPassword }) => {
+    const response = await api.put('/users/update-password', { currentPassword, newPassword });
+    return response.data;
+}
+
+export const confirmResetPassword = async ({ email, token, newPassword }) => {
+    const response = await api.post('/users/reset-password', { email, token, newPassword });
+    return response.data;
+}
+
+export const requestPasswordReset = async (email) => {
+    const response = await api.post('/users/forgot-password', { email });
+    return response.data;
+}

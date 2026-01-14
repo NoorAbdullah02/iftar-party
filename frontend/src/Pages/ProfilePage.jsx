@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, CheckCircle, X, Camera, Edit2, Save } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { getUserProfile, sendVerificationEmail, verifyEmailToken } from '../Services/authApi';
+import { getUserProfile, sendVerificationEmail, verifyEmailToken, updateUserName, updateUserPassword } from '../Services/authApi';
 
 const ProfilePage = () => {
-    const { user, logout } = useAuth();
+    const { user, logout, login } = useAuth();
     const [profileData, setProfileData] = useState(null);
     const [profileImage, setProfileImage] = useState(null);
     const [editingProfile, setEditingProfile] = useState(false);
@@ -79,20 +79,28 @@ const ProfilePage = () => {
             };
             reader.readAsDataURL(file);
         } catch (err) {
-            toast.error('Failed to upload image');
+            toast.error('Failed to upload image', err);
         }
     };
 
     const handleEditProfile = async () => {
+        if (!editData?.name || editData.name.trim().length === 0) {
+            return toast.error('Name cannot be empty');
+        }
+
         try {
             setIsSaving(true);
-            // Call your update profile API here
-            // await updateProfile(editData);
-            setProfileData(editData);
+            const updated = await updateUserName({ name: editData.name.trim() });
+
+            setProfileData((prev) => ({ ...prev, ...updated }));
+            setEditData((prev) => ({ ...prev, ...updated }));
             setEditingProfile(false);
-            toast.success('Profile updated successfully');
+
+            if (login) login(updated);
+            toast.success('Name updated successfully');
         } catch (err) {
-            toast.error('Failed to update profile');
+            console.error('Update name error:', err);
+            toast.error(err?.response?.data?.message || 'Failed to update name');
         } finally {
             setIsSaving(false);
         }
@@ -109,15 +117,20 @@ const ProfilePage = () => {
             return;
         }
 
+        if (passwordData.newPassword.length < 8) {
+            toast.error('New password must be at least 8 characters');
+            return;
+        }
+
         try {
             setIsChanging(true);
-            // Call your change password API here
-            // await changePassword(passwordData);
-            toast.success('Password changed successfully');
+            const res = await updateUserPassword({ currentPassword: passwordData.oldPassword, newPassword: passwordData.newPassword });
+            toast.success(res?.message || 'Password changed successfully');
             setShowPasswordModal(false);
             setPasswordData({ oldPassword: '', newPassword: '', confirmPassword: '' });
         } catch (err) {
-            toast.error('Failed to change password');
+            console.error('Change password error:', err);
+            toast.error(err?.response?.data?.message || 'Failed to change password');
         } finally {
             setIsChanging(false);
         }

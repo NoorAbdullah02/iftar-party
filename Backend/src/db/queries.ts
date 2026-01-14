@@ -1,6 +1,6 @@
 import { db } from '../db/index';
 import { eq, lt, sql, and } from 'drizzle-orm';
-import { users, sessionTable, verifyEmailTable } from "./schema";
+import { users, sessionTable, verifyEmailTable, passwordResetTokenTable } from "./schema";
 import type { newVerify, newSession, NewUser } from "./schema";
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
@@ -234,5 +234,97 @@ export const sendNewVerificationEmail = async (
     }
 };
 
+export const updateUserName = async (userId: number, name: string) => {
+    const [updated] = await db.update(users)
+        .set({ name })
+        .where(eq(users.id, userId))
+        .returning();
+    return updated;
+}
 
+
+export const updateUserPassword = async (userId: number, hashedPassword: string) => {
+
+    const [updated] = await db.update(users)
+        .set({ password: hashedPassword })
+        .where(eq(users.id, userId))
+        .returning();
+    return updated;
+}
+
+export const insertPasswordResetToken = async (userId: number, token: string) => {
+    return db.transaction(async (tx) => {
+        try {
+            // Remove expired tokens
+            await tx.delete(passwordResetTokenTable)
+                .where(lt(passwordResetTokenTable.expiresAt, sql`CURRENT_TIMESTAMP`));
+
+            // Remove any existing token for this user
+            await tx.delete(passwordResetTokenTable)
+                .where(eq(passwordResetTokenTable.userId, userId));
+
+            const [inserted] = await tx.insert(passwordResetTokenTable)
+                .values({ userId, token })
+                .returning();
+            return inserted;
+        } catch (err) {
+            console.error('Error inserting password reset token:', err);
+            throw err;
+        }
+    });
+}
+
+export const findPasswordResetToken = async ({ token, userId }: { token: string; userId: number }) => {
+    const [row] = await db.select()
+        .from(passwordResetTokenTable)
+        .where(and(eq(passwordResetTokenTable.token, token), eq(passwordResetTokenTable.userId, userId)));
+    return row;
+}
+
+export const deletePasswordResetTokensForUser = async (userId: number) => {
+    return db.delete(passwordResetTokenTable).where(eq(passwordResetTokenTable.userId, userId));
+}
+
+export const sendPasswordResetEmail = async (userId: number, email: string) => {
+    const randomToken = generateRandomToken(8);
+
+    // persist token with cleanup
+    await insertPasswordResetToken(userId, randomToken);
+
+    const resetUrl = new URL(`${env.FRONTEND_URL}/reset-password`);
+    resetUrl.searchParams.append('token', randomToken);
+    resetUrl.searchParams.append('email', email);
+
+    // Simple reset email HTML (keeps styling consistent with verification email)
+    const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Reset your password</title></head><body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: #f7fafc; padding: 24px;">
+  <div style="max-width:560px; margin:0 auto; background:#fff; border-radius:12px; padding:32px; box-shadow:0 10px 30px rgba(2,6,23,0.08);">
+    <h2 style="margin:0 0 12px; color:#111827">Reset your password</h2>
+    <p style="margin:0 0 20px; color:#6b7280">We received a request to reset your password. Use the code below or click the button to continue.</p>
+    <div style="background:#f3f4f6; padding:18px; border-radius:8px; text-align:center; margin-bottom:18px;">
+      <div style="font-family: 'Courier New', monospace; font-size:28px; font-weight:700; letter-spacing:4px;">${randomToken}</div>
+    </div>
+    <div style="text-align:center; margin-bottom:12px;"><a href="${resetUrl.toString()}" style="display:inline-block; background:#2563eb; color:#fff; padding:12px 28px; border-radius:8px; text-decoration:none; font-weight:600;">Reset Password</a></div>
+    <p style="color:#9ca3af; font-size:13px;">If you didn't request this, you can safely ignore this email.</p>
+  </div>
+</body></html>`;
+
+    try {
+        const result = await sendMail(email, 'Reset your password', html);
+        return {
+            success: true,
+            message: 'Password reset token created',
+            previewUrl: result?.previewUrl,
+        };
+    } catch (err: any) {
+        console.error('Error sending password reset email:', err);
+        return {
+            success: false,
+            tokenCreated: true,
+            emailSent: false,
+            message: 'Password reset token created (email send failed)',
+            error: (err as any)?.response?.data ?? String(err),
+        };
+    }
+}
 

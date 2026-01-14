@@ -13,7 +13,6 @@ import jwt from 'jsonwebtoken';
 
 
 
-
 export const registerUser = async (req: Request, res: Response) => {
     try {
 
@@ -159,7 +158,7 @@ export const checkEmailExists = async (req: Request, res: Response) => {
 export const getCurrentUser = async (req: Request, res: Response) => {
     try {
         const user = (req as any).user;
-        
+
         if (!user) {
             return res.status(401).json({ message: "Unauthorized" });
         }
@@ -311,6 +310,35 @@ export const resendVerificationByEmail = async (req: Request, res: Response) => 
     }
 }
 
+export const resetUserPassword = async (req: Request, res: Response) => {
+    try {
+        const { email, token, newPassword } = req.body;
+
+        if (!email || !token || !newPassword) {
+            return res.status(400).json({ message: 'Email, token and new password are required' });
+        }
+
+        if (typeof newPassword !== 'string' || newPassword.length < 8) {
+            return res.status(400).json({ message: 'New password must be at least 8 characters' });
+        }
+
+        const user = await queries.getUserByEmail(email);
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        const tokenRow = await queries.findPasswordResetToken({ token, userId: user.id });
+        if (!tokenRow) return res.status(400).json({ message: 'Invalid or expired token' });
+
+        const hashed = await bcrypt.hash(newPassword, 10);
+        await queries.updateUserPassword(user.id, hashed);
+        await queries.deletePasswordResetTokensForUser(user.id);
+
+        return res.status(200).json({ message: 'Password reset successful' });
+    } catch (err) {
+        console.error('Error in resetUserPassword:', err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
 export const verifyEmailToken = async (req: Request, res: Response) => {
     try {
         const { email, token } = req.body;
@@ -337,3 +365,94 @@ export const verifyEmailToken = async (req: Request, res: Response) => {
     }
 }
 
+
+export const editUserName = async (req: Request, res: Response) => {
+
+    if (!(req as any).user) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        });
+    }
+    try {
+        const user = await queries.findUserById((req as any).user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const { name } = req.body;
+        if (!name || typeof name !== 'string' || name.trim().length === 0) {
+            return res.status(400).json({ message: "Invalid name" });
+        }
+
+        const updatedUser = await queries.updateUserName(user.id, name.trim());
+        return res.status(200).json({
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+        });
+    }
+    catch (error) {
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+
+export const changeUserPassword = async (req: Request, res: Response) => {
+    if (!(req as any).user) {
+        return res.status(401).json({
+            message: "Unauthorized"
+        });
+    }
+    try {
+        const user = await queries.findUserById((req as any).user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const { currentPassword, newPassword } = req.body;
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ message: "Current password and new password are required" });
+        }
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: "Current password is incorrect" });
+        }
+
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        const result = await queries.updateUserPassword(user.id, hashedNewPassword);
+
+        return res.status(200).json({ message: "Password updated successfully" });
+
+
+    } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error" });
+
+
+    }
+
+}
+
+
+export const forgotUserPassword = async (req: Request, res: Response) => {
+
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        const user = await queries.getUserByEmail(email);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const result = await queries.sendPasswordResetEmail(user.id, user.email);
+        if (result?.success) {
+            return res.status(200).json({ message: 'Password reset token created', previewUrl: result.previewUrl });
+        } else {
+            return res.status(200).json({ message: 'Password reset token created (email send failed)', previewUrl: result?.previewUrl, error: result?.error });
+        }
+
+    } catch (err) {
+        console.error('Error in forgotUserPassword:', err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+
+}

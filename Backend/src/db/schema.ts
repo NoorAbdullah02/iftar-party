@@ -12,6 +12,8 @@ export const users = pgTable("users", {
     updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull()
 });
 
+
+
 export const sessionTable = pgTable("sessions", {
     id: serial("id").primaryKey(),
     userId: integer("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
@@ -22,6 +24,27 @@ export const sessionTable = pgTable("sessions", {
     updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull()
 
 })
+
+
+
+export const passwordResetTokenTable = pgTable("password_reset_tokens", {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
+    token: varchar("token", { length: 8 }).notNull(),
+    expiresAt: timestamp("expires_at", {
+        mode: 'date',
+        withTimezone: false,
+    })
+        .default(sql`CURRENT_TIMESTAMP + INTERVAL '15 minutes'`)
+        .notNull(),
+
+    createdAt: timestamp("created_at", {
+        mode: 'date',
+        withTimezone: false,
+    }).defaultNow(),
+});
+
+
 
 export const verifyEmailTable = pgTable("verify_email", {
     id: serial("id").primaryKey(),
