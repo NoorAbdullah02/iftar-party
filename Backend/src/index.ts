@@ -17,16 +17,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: (origin, callback) => {
-        // Allow if no origin (server-to-server / same-origin) or in development allow all origins
-        if (!origin) return callback(null, true);
-        if (env.NODE_ENV === 'production') {
-            return callback(null, true);
-        }
-        // in development allow all (use withCredentials for cookies)
-        return callback(null, true);
-    },
-    credentials: true,
+    origin: process.env.FRONTEND_URL,
+    credentials: true
 }));
 app.use(cookieParser());
 app.use(requestIp.mw());
