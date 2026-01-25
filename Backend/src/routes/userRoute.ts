@@ -9,7 +9,7 @@ router.post('/register', registerUser);
 
 router.post('/check-email', checkEmailExists)
 
-router.post('/login', loginUser);
+router.post('/signin', loginUser);
 
 router.post('/logout', logoutUser);
 

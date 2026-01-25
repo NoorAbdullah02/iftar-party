@@ -20,7 +20,7 @@ export const checkEmailExists = async (email) => {
 
 export const loginUser = async (userData) => {
     try {
-        const response = await api.post('/users/login', userData);
+        const response = await api.post('/users/signin', userData);
         return response.data;
     } catch (err) {
         if (err?.response?.data) {

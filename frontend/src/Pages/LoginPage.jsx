@@ -71,7 +71,12 @@ const LoginPage = () => {
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
-      const msg = err?.response?.data?.message || err.message || 'Login failed. Please try again.';
+      let msg = err?.response?.data?.message || err.message || 'Login failed. Please try again.';
+
+      if (err.code === 'ERR_NETWORK' || err.message === 'Network Error') {
+        msg = 'Connection blocked. Please disable AdBlocker or check your connection.';
+      }
+
       toast.error(msg);
     } finally {
       setIsLoading(false);
