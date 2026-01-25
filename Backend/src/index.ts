@@ -21,8 +21,7 @@ app.use(cors({
         // Allow if no origin (server-to-server / same-origin) or in development allow all origins
         if (!origin) return callback(null, true);
         if (env.NODE_ENV === 'production') {
-            if (origin === env.FRONTEND_URL) return callback(null, true);
-            return callback(new Error('Not allowed by CORS'));
+            return callback(null, true);
         }
         // in development allow all (use withCredentials for cookies)
         return callback(null, true);
