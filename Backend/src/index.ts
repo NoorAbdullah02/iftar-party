@@ -33,14 +33,14 @@ app.get('/check', (req, res) => {
     res.json({
         message: "WellCome to Product Store",
         points: {
-            users: "/_server/app",
+            users: "/api/app",
         }
     })
 });
 
 
-app.use("/_server/app", userRoute);
-app.use("/_server/picnic", picnicRoute);
+app.use("/api/app", userRoute);
+app.use("/api/picnic", picnicRoute);
 
 
 
