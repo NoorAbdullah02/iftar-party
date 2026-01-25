@@ -1,14 +1,14 @@
 import api from './api';
 
 export const registerUser = async (userData) => {
-    const response = await api.post('/users/register', userData);
+    const response = await api.post('/app/register', userData);
     return response.data;
 
 }
 
 export const checkEmailExists = async (email) => {
     try {
-        const response = await api.post('/users/check-email', { email });
+        const response = await api.post('/app/check-email', { email });
         return response.data.exists;
     } catch (err) {
         if (err.response?.status === 409) {
@@ -20,7 +20,7 @@ export const checkEmailExists = async (email) => {
 
 export const loginUser = async (userData) => {
     try {
-        const response = await api.post('/users/signin', userData);
+        const response = await api.post('/app/access', userData);
         return response.data;
     } catch (err) {
         if (err?.response?.data) {
@@ -34,49 +34,49 @@ export const loginUser = async (userData) => {
 }
 
 export const logoutUser = async () => {
-    const response = await api.post('/users/logout');
+    const response = await api.post('/app/logout');
     return response.data;
 }
 
 
 export const getUserProfile = async () => {
-    const response = await api.get('/users/profile');
+    const response = await api.get('/app/profile');
     return response.data;
 }
 
 export const sendVerificationEmail = async () => {
-    const response = await api.post('/users/send-verification-email');
+    const response = await api.post('/app/send-verification-email');
     return response.data;
 }
 
 export const verifyEmailToken = async ({ email, token }) => {
-    const response = await api.post('/users/verify-email-token', { email, token });
+    const response = await api.post('/app/verify-email-token', { email, token });
     return response.data;
 }
 
 export const resendVerificationEmail = async (email) => {
-    const response = await api.post('/users/resend-verification-email', { email });
+    const response = await api.post('/app/resend-verification-email', { email });
     return response.data;
 }
 
 export const updateUserName = async ({ name }) => {
 
-    const response = await api.put('/users/update-name', { name });
+    const response = await api.put('/app/update-name', { name });
     return response.data;
 
 }
 
 export const updateUserPassword = async ({ currentPassword, newPassword }) => {
-    const response = await api.put('/users/update-password', { currentPassword, newPassword });
+    const response = await api.put('/app/update-password', { currentPassword, newPassword });
     return response.data;
 }
 
 export const confirmResetPassword = async ({ email, token, newPassword }) => {
-    const response = await api.post('/users/reset-password', { email, token, newPassword });
+    const response = await api.post('/app/reset-password', { email, token, newPassword });
     return response.data;
 }
 
 export const requestPasswordReset = async (email) => {
-    const response = await api.post('/users/forgot-password', { email });
+    const response = await api.post('/app/forgot-password', { email });
     return response.data;
 }

@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
         // Try to fetch current user using httpOnly cookie (backend must set cookie and expose /me)
         let mounted = true;
         import('../Services/api').then(({ default: api }) => {
-            api.get('/users/me')
+            api.get('/app/session')
                 .then((res) => {
                     if (!mounted) return;
                     if (res?.data?.user) {

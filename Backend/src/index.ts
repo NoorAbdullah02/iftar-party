@@ -41,7 +41,7 @@ app.get('/check', (req, res) => {
 });
 
 
-app.use("/api/users", userRoute);
+app.use("/api/app", userRoute);
 app.use("/api/picnic", picnicRoute);
 
 

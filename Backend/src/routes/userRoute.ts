@@ -9,7 +9,7 @@ router.post('/register', registerUser);
 
 router.post('/check-email', checkEmailExists)
 
-router.post('/signin', loginUser);
+router.post('/access', loginUser);
 
 router.post('/logout', logoutUser);
 
@@ -33,7 +33,7 @@ router.post('/forgot-password', forgotUserPassword);
 router.post('/reset-password', resetUserPassword);
 
 // Returns current user if authenticated (reads httpOnly cookie or Authorization header)
-router.get('/me', checkValiditi, getCurrentUser);
+router.get('/session', checkValiditi, getCurrentUser);
 
 
 

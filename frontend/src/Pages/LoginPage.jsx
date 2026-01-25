@@ -48,7 +48,7 @@ const LoginPage = () => {
 
       // fetch current user and update auth context
       try {
-        const me = await api.get('/users/me');
+        const me = await api.get('/app/session');
         if (me.data?.user) {
           login(me.data.user);
         }
