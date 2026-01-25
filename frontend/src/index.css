@@ -1,1 +1,73 @@
 @import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #ffffff;
+    color: #000000 !important;
+    /* Force Pure Black */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #000000 !important;
+    /* Force Pure Black for Headings */
+    font-weight: 800;
+    /* Extra bold for better legibility */
+  }
+
+  p,
+  span,
+  div,
+  li,
+  a {
+    color: #000000;
+    /* Default to black */
+  }
+
+  /* Exceptions for specific UI elements that need to be white */
+  .text-white {
+    color: #ffffff !important;
+  }
+
+  /* Input fields text */
+  input,
+  select,
+  textarea {
+    color: #000000 !important;
+    font-weight: 500;
+  }
+
+  /* Placeholders */
+  ::placeholder {
+    color: #666666 !important;
+    /* Darker gray for placeholders */
+    opacity: 1;
+  }
+}
+
+.count-up {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0f766e;
+  /* Teal 700 */
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0d9488;
+}

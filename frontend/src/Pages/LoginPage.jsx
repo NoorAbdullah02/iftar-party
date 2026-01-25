@@ -38,6 +38,14 @@ const LoginPage = () => {
       const payload = { email: email.toLowerCase(), password };
       const data = await loginUser(payload);
 
+      // Store token in localStorage
+      if (data.accessToken) {
+        localStorage.setItem('accessToken', data.accessToken);
+      }
+      if (data.sessionId) {
+        localStorage.setItem('sessionId', data.sessionId);
+      }
+
       // fetch current user and update auth context
       try {
         const me = await api.get('/users/me');
@@ -45,7 +53,7 @@ const LoginPage = () => {
           login(me.data.user);
         }
       } catch (err) {
-        // ignore, user might not be returned immediately
+        // ignore
       }
 
       toast.success(data.message || 'Welcome back! 🎉');

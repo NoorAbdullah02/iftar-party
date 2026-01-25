@@ -81,6 +81,28 @@ export const sessionsRelation = relations(sessionTable, ({ one }) => ({
 
 
 
+// Picnic Registrations Table
+export const registrations = pgTable("registrations", {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 255 }).notNull(),
+    department: varchar("department", { length: 100 }).notNull().default("ICE"),
+    batch: varchar("batch", { length: 100 }).notNull(),
+    mobile: varchar("mobile", { length: 20 }).notNull(),
+    email: varchar("email", { length: 255 }).notNull(),
+    paymentStatus: boolean("payment_status").notNull().default(false),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
+    updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull()
+});
+
+// Expenses Table
+export const expenses = pgTable("expenses", {
+    id: serial("id").primaryKey(),
+    title: varchar("title", { length: 255 }).notNull(),
+    amount: integer("amount").notNull(),
+    note: text("note"),
+    createdAt: timestamp("created_at", { mode: "date" }).defaultNow()
+});
+
 export type verify = typeof verifyEmailTable.$inferSelect;
 export type newVerify = typeof verifyEmailTable.$inferInsert;
 
@@ -89,3 +111,9 @@ export type newSession = typeof sessionTable.$inferInsert;
 
 export type user = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+
+export type registration = typeof registrations.$inferSelect;
+export type newRegistration = typeof registrations.$inferInsert;
+
+export type expense = typeof expenses.$inferSelect;
+export type newExpense = typeof expenses.$inferInsert;

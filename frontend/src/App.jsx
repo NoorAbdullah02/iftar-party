@@ -6,6 +6,10 @@ import ProfilePage from './Pages/ProfilePage.jsx'
 import VerifyEmailToken from './Pages/VerifyEmailToken.jsx'
 import ResetPassword from './Pages/ResetPassword.jsx'
 import ForgotPassword from './Pages/ForgotPassword.jsx'
+import LandingPage from './Pages/LandingPage.jsx'
+import PicnicRegisterPage from './Pages/PicnicRegisterPage.jsx'
+import PicnicSuccessPage from './Pages/PicnicSuccessPage.jsx'
+import AdminDashboard from './Pages/AdminDashboard.jsx'
 import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx'
 import { Toaster } from 'react-hot-toast';
@@ -25,16 +29,19 @@ const App = () => {
         <main>
           <Toaster position="top-right" />
           <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/picnic-register" element={<PicnicRegisterPage />} />
+            <Route path="/picnic-success" element={<PicnicSuccessPage />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/verify-email-token" element={<VerifyEmailToken />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/after-register" element={<AfterRegister />} />
             <Route path="*" element={<Navigate to="/" />} />
-
           </Routes>
         </main>
       </div>

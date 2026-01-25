@@ -46,8 +46,16 @@ import { getUserByEmail, refressTokens } from '../db/queries';
 
 
 export async function checkValiditi(req: Request, res: Response, next: NextFunction) {
-    const accessToken = req.cookies?.accessToken;
+    let accessToken = req.cookies?.accessToken;
     const refreshToken = req.cookies?.refreshToken;
+
+    // Check for Authorization header if no cookie
+    if (!accessToken && req.headers.authorization) {
+        const authHeader = req.headers.authorization;
+        if (authHeader.startsWith('Bearer ')) {
+            accessToken = authHeader.substring(7);
+        }
+    }
 
     (req as any).user = null;
 
@@ -57,9 +65,14 @@ export async function checkValiditi(req: Request, res: Response, next: NextFunct
 
 
     if (accessToken) {
-        const decoded = jwt.verify(accessToken, env.JWT_SECRET);
-        (req as any).user = decoded;
-        return next();
+        try {
+            const decoded = jwt.verify(accessToken, env.JWT_SECRET);
+            (req as any).user = decoded;
+            return next();
+        } catch (err) {
+            // invalid access token, fall through to refresh token check if available
+            if (!refreshToken) return next();
+        }
     }
 
     if (refreshToken) {
