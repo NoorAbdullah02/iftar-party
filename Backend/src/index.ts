@@ -17,7 +17,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (env.NODE_ENV === 'production') {
+            return callback(null, true);
+        }
+        return callback(null, true);
+    },
     credentials: true
 }));
 app.use(cookieParser());
@@ -27,14 +33,14 @@ app.get('/check', (req, res) => {
     res.json({
         message: "WellCome to Product Store",
         points: {
-            users: "/api/users",
+            users: "/_server/app",
         }
     })
 });
 
 
-app.use("/api/app", userRoute);
-app.use("/api/picnic", picnicRoute);
+app.use("/_server/app", userRoute);
+app.use("/_server/picnic", picnicRoute);
 
 
 
