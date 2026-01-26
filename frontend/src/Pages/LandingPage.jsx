@@ -32,7 +32,7 @@ const LandingPage = () => {
                     {/* Title */}
                     <div className="mb-10 bg-white/95 backdrop-blur-sm p-8 rounded-3xl border border-green-200 shadow-sm inline-block">
                         <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-black mb-4 leading-tight">
-                            🌸 চড়ুইভাতি – ২০২৬
+                            চড়ুইভাতি – ২০২৬
                         </h1>
                         <div className="space-y-4 py-2">
                             <p className="text-3xl md:text-4xl font-black text-black">ICE Department</p>
@@ -120,9 +120,10 @@ const LandingPage = () => {
                         <div className="sticky top-0 bg-gradient-to-r from-green-700 to-emerald-700 text-white p-10 rounded-t-3xl z-10 border-b-4 border-green-400">
                             <button
                                 onClick={toggleMenu}
-                                className="absolute top-6 right-6 p-3 hover:bg-white/20 rounded-full transition-colors duration-200"
+                                className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/30 rounded-full transition-colors duration-200 cursor-pointer z-50 backdrop-blur-sm"
+                                aria-label="Close menu"
                             >
-                                <X className="w-7 h-7" />
+                                <X className="w-8 h-8 text-white drop-shadow-md" />
                             </button>
                             <h2 className="text-5xl font-black mb-3 drop-shadow-lg">🍽️ পিকনিক খাবারের মেনু</h2>
                             <p className="text-green-100 text-xl font-semibold">চড়ুইভাতি – ২০২৬ | ICE Department</p>

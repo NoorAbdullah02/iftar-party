@@ -13,7 +13,9 @@ import {
     getFinancialSummary,
     getTotalExpenses,
     getTotalCollectedAmount,
-    getRemainingBalance
+    getRemainingBalance,
+    updateRegistration,
+    deleteRegistration
 } from '../db/picnicQueries';
 
 // ==================== REGISTRATION CONTROLLERS ====================
@@ -262,6 +264,70 @@ export const getFinancials = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             message: error.message || 'Failed to fetch financial data'
+        });
+    }
+};
+
+// ==================== EDIT/DELETE REGISTRATION ====================
+
+export const modifyRegistration = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const updates = req.body;
+
+        if (!updates || Object.keys(updates).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No update data provided'
+            });
+        }
+
+        const updated = await updateRegistration(Number(id), updates);
+
+        if (!updated) {
+            return res.status(404).json({
+                success: false,
+                message: 'Registration not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Registration updated successfully',
+            data: updated
+        });
+    } catch (error: any) {
+        console.error('Update registration error:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Failed to update registration'
+        });
+    }
+};
+
+export const removeRegistration = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+
+        const deleted = await deleteRegistration(Number(id));
+
+        if (!deleted) {
+            return res.status(404).json({
+                success: false,
+                message: 'Registration not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Registration deleted successfully',
+            data: deleted
+        });
+    } catch (error: any) {
+        console.error('Delete registration error:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Failed to delete registration'
         });
     }
 };

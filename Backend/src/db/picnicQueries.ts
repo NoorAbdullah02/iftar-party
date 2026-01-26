@@ -65,6 +65,24 @@ export const updateMultiplePaymentStatus = async (ids: number[], status: boolean
     return updated;
 };
 
+export const updateRegistration = async (id: number, data: Partial<newRegistration>) => {
+    // Prevent updating id or createdAt
+    const { id: _, createdAt: __, ...updateData } = data as any;
+
+    const [updated] = await db.update(registrations)
+        .set({ ...updateData, updatedAt: new Date() })
+        .where(eq(registrations.id, id))
+        .returning();
+    return updated;
+};
+
+export const deleteRegistration = async (id: number) => {
+    const [deleted] = await db.delete(registrations)
+        .where(eq(registrations.id, id))
+        .returning();
+    return deleted;
+};
+
 export const getRegistrationsByBatch = async (batch: string) => {
     return db.select()
         .from(registrations)

@@ -1,4 +1,4 @@
-import { Search, Filter, CheckCircle, XCircle, Mail, Phone, GraduationCap } from 'lucide-react';
+import { Search, Filter, CheckCircle, XCircle, Mail, Phone, GraduationCap, Edit, Trash2 } from 'lucide-react';
 
 const RegistrationsTab = ({
     registrations,
@@ -14,7 +14,9 @@ const RegistrationsTab = ({
     toggleSelection,
     toggleSelectAll,
     handlePaymentStatusUpdate,
-    handleBulkPaymentUpdate
+    handleBulkPaymentUpdate,
+    handleDeleteRegistration,
+    onEdit
 }) => {
     return (
         <div className="space-y-6">
@@ -103,8 +105,8 @@ const RegistrationsTab = ({
                                 <th className="px-6 py-4 text-left font-bold">ব্যাচ</th>
                                 <th className="px-6 py-4 text-left font-bold">মোবাইল</th>
                                 <th className="px-6 py-4 text-left font-bold">ইমেইল</th>
-                                <th className="px-6 py-4 text-left font-bold">পেমেন্ট</th>
-                                <th className="px-6 py-4 text-left font-bold">অ্যাকশন</th>
+                                <th className="px-6 py-4 text-left font-bold">পেমেন্ট স্ট্যাটাস</th>
+                                <th className="px-6 py-4 text-center font-bold">ম্যানেজ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -138,23 +140,41 @@ const RegistrationsTab = ({
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`px-4 py-2 rounded-full text-sm font-bold ${reg.paymentStatus
+                                            <div className="flex flex-col gap-2">
+                                                <span className={`px-4 py-2 rounded-full text-sm font-bold text-center ${reg.paymentStatus
                                                     ? 'bg-green-100 text-green-700'
                                                     : 'bg-orange-100 text-orange-700'
-                                                }`}>
-                                                {reg.paymentStatus ? '✅ পেইড' : '⏳ আনপেইড'}
-                                            </span>
+                                                    }`}>
+                                                    {reg.paymentStatus ? '✅ পেইড' : '⏳ আনপেইড'}
+                                                </span>
+                                                <button
+                                                    onClick={() => handlePaymentStatusUpdate(reg.id, !reg.paymentStatus)}
+                                                    className={`px-4 py-2 rounded-lg font-semibold text-xs transition-colors border ${reg.paymentStatus
+                                                        ? 'bg-white text-orange-600 border-orange-200 hover:bg-orange-50'
+                                                        : 'bg-white text-green-600 border-green-200 hover:bg-green-50'
+                                                        }`}
+                                                >
+                                                    {reg.paymentStatus ? 'আনপেইড করুন' : 'পেইড নিশ্চিত করুন'}
+                                                </button>
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <button
-                                                onClick={() => handlePaymentStatusUpdate(reg.id, !reg.paymentStatus)}
-                                                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${reg.paymentStatus
-                                                        ? 'bg-orange-500 text-white hover:bg-orange-600'
-                                                        : 'bg-green-500 text-white hover:bg-green-600'
-                                                    }`}
-                                            >
-                                                {reg.paymentStatus ? 'আনপেইড করুন' : 'পেইড করুন'}
-                                            </button>
+                                            <div className="flex flex-col gap-2">
+                                                <button
+                                                    onClick={() => onEdit(reg)}
+                                                    className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors text-sm font-bold"
+                                                >
+                                                    <Edit className="w-4 h-4" />
+                                                    এডিট
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteRegistration(reg.id)}
+                                                    className="flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors text-sm font-bold"
+                                                >
+                                                    <Trash2 className="w-4 h-4" />
+                                                    মুছুন
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))
@@ -183,7 +203,7 @@ const RegistrationsTab = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -8,7 +8,9 @@ import {
     addExpense,
     getExpenses,
     removeExpense,
-    getFinancials
+    getFinancials,
+    modifyRegistration,
+    removeRegistration
 } from '../controllers/picnicController';
 import { verifyToken } from '../middleware/authMiddleware';
 
@@ -22,7 +24,9 @@ router.post('/register', registerForPicnic);
 router.get('/registrations', verifyToken, getRegistrations);
 router.get('/registrations/:id', verifyToken, getRegistrationDetails);
 router.patch('/registrations/:id/payment', verifyToken, markPaymentStatus);
+router.put('/registrations/:id', verifyToken, modifyRegistration);
 router.patch('/registrations/payment/bulk', verifyToken, markMultiplePaymentStatus);
+router.delete('/registrations/:id', verifyToken, removeRegistration);
 
 // Expenses
 router.post('/expenses', verifyToken, addExpense);

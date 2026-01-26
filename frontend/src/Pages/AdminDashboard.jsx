@@ -5,7 +5,7 @@ import api from '../Services/api';
 import toast from 'react-hot-toast';
 import {
     Users, DollarSign, TrendingUp, TrendingDown, Plus, Trash2, Download,
-    Search, Filter, CheckCircle, XCircle, Calendar, Receipt, FileText
+    Search, Filter, CheckCircle, XCircle, Calendar, Receipt, FileText, LayoutDashboard
 } from 'lucide-react';
 
 // Import tab components
@@ -13,6 +13,7 @@ import OverviewTab from '../Components/OverviewTab';
 import RegistrationsTab from '../Components/RegistrationsTab';
 import ExpensesTab from '../Components/ExpensesTab';
 import ReportsTab from '../Components/ReportsTab';
+import EditRegistrationModal from '../Components/EditRegistrationModal';
 
 const AdminDashboard = () => {
     const { isLoggedIn, user } = useAuth();
@@ -40,6 +41,10 @@ const AdminDashboard = () => {
         amount: '',
         note: ''
     });
+
+    // Registration Edit Modal
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editingRegistration, setEditingRegistration] = useState(null);
 
     const dashboardRef = useRef(null);
 
@@ -78,34 +83,173 @@ const AdminDashboard = () => {
         }
     };
 
-    const handlePaymentStatusUpdate = async (id, status) => {
-        try {
-            await api.patch(`/picnic/registrations/${id}/payment`, { status });
+    const handlePaymentStatusUpdate = (id, status) => {
+        toast((t) => (
+            <div className="flex flex-col gap-3 min-w-[280px]">
+                <div>
+                    <p className="font-bold text-gray-800 text-lg">পেমেন্ট স্ট্যাটাস পরিবর্তন?</p>
+                    <p className="text-sm text-gray-500 font-medium">
+                        আপনি কি নিশ্চিত যে আপনি পেমেন্ট স্ট্যাটাস <span className={`font-bold ${status ? 'text-green-600' : 'text-orange-600'}`}>{status ? 'পেইড' : 'আনপেইড'}</span> হিসেবে মার্ক করতে চান?
+                    </p>
+                </div>
+                <div className="flex gap-3 justify-end mt-1">
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-bold transition-colors"
+                    >
+                        বাতিল
+                    </button>
+                    <button
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            try {
+                                await api.patch(`/picnic/registrations/${id}/payment`, { status });
+                                toast.success(status ? '✅ পেমেন্ট সম্পন্ন চিহ্নিত করা হয়েছে' : '❌ পেমেন্ট বাতিল করা হয়েছে');
+                                fetchData();
+                            } catch (error) {
+                                console.error('Payment update error:', error);
+                                toast.error('পেমেন্ট আপডেট ব্যর্থ হয়েছে');
+                            }
+                        }}
+                        className={`px-4 py-2 text-white rounded-lg text-sm font-bold transition-colors shadow-lg ${status
+                            ? 'bg-green-600 hover:bg-green-700 shadow-green-500/30'
+                            : 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/30'
+                            }`}
+                    >
+                        হ্যাঁ, পরিবর্তন করুন
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+            style: {
+                background: '#fff',
+                padding: '24px',
+                borderRadius: '20px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                border: '2px solid #e2e8f0'
+            },
+        });
+    };
 
-            toast.success(status ? '✅ পেমেন্ট সম্পন্ন চিহ্নিত করা হয়েছে' : '❌ পেমেন্ট বাতিল করা হয়েছে');
+    const handleDeleteRegistration = (id) => {
+        toast((t) => (
+            <div className="flex flex-col gap-3 min-w-[280px]">
+                <div>
+                    <p className="font-bold text-gray-800 text-lg">আপনি কি নিশ্চিত?</p>
+                    <p className="text-sm text-gray-500 font-medium">এই রেজিস্ট্রেশনটি মুছে ফেলা হবে। এটি আর পুনরুদ্ধার করা সম্ভব নয়!</p>
+                </div>
+                <div className="flex gap-3 justify-end mt-1">
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-bold transition-colors"
+                    >
+                        বাতিল
+                    </button>
+                    <button
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            try {
+                                await api.delete(`/picnic/registrations/${id}`);
+                                toast.success('🗑️ রেজিস্ট্রেশন সফলভাবে মুছে ফেলা হয়েছে');
+                                fetchData();
+                            } catch (error) {
+                                console.error('Delete registration error:', error);
+                                toast.error('রেজিস্ট্রেশন মুছতে ব্যর্থ হয়েছে');
+                            }
+                        }}
+                        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-bold transition-colors shadow-lg shadow-red-500/30"
+                    >
+                        হ্যাঁ, মুছুন
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+            style: {
+                background: '#fff',
+                padding: '24px',
+                borderRadius: '20px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                border: '2px solid #fee2e2'
+            },
+        });
+    };
+
+    const handleEditRegistration = async (id, data) => {
+        try {
+            await api.put(`/picnic/registrations/${id}`, data);
+            toast.success('✏️ রেজিস্ট্রেশন আপডেট করা হয়েছে');
+            setShowEditModal(false);
+            setEditingRegistration(null);
             fetchData();
         } catch (error) {
-            console.error('Payment update error:', error);
-            toast.error('পেমেন্ট আপডেট ব্যর্থ হয়েছে');
+            console.error('Update registration error:', error);
+            toast.error('রেজিস্ট্রেশন আপডেট করতে ব্যর্থ হয়েছে');
         }
     };
 
-    const handleBulkPaymentUpdate = async (status) => {
+    const openEditModal = (registration) => {
+        setEditingRegistration(registration);
+        setShowEditModal(true);
+    };
+
+    const handleBulkPaymentUpdate = (status) => {
         if (selectedIds.length === 0) {
             toast.error('অনুগ্রহ করে কমপক্ষে একজন নির্বাচন করুন');
             return;
         }
 
-        try {
-            await api.patch('/picnic/registrations/payment/bulk', { ids: selectedIds, status });
-
-            toast.success(`✅ ${selectedIds.length} জনের পেমেন্ট আপডেট করা হয়েছে`);
-            setSelectedIds([]);
-            fetchData();
-        } catch (error) {
-            console.error('Bulk payment update error:', error);
-            toast.error('পেমেন্ট আপডেট ব্যর্থ হয়েছে');
-        }
+        toast((t) => (
+            <div className="flex flex-col gap-3 min-w-[280px]">
+                <div>
+                    <p className="font-bold text-gray-800 text-lg">বাল্ক স্ট্যাটাস পরিবর্তন?</p>
+                    <p className="text-sm text-gray-500 font-medium">
+                        আপনি {selectedIds.length} জনের পেমেন্ট স্ট্যাটাস <span className={`font-bold ${status ? 'text-green-600' : 'text-orange-600'}`}>{status ? 'পেইড' : 'আনপেইড'}</span> হিসেবে মার্ক করতে যাচ্ছেন।
+                    </p>
+                </div>
+                <div className="flex gap-3 justify-end mt-1">
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-bold transition-colors"
+                    >
+                        বাতিল
+                    </button>
+                    <button
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            try {
+                                await api.patch('/picnic/registrations/payment/bulk', { ids: selectedIds, status });
+                                toast.success(`✅ ${selectedIds.length} জনের পেমেন্ট আপডেট করা হয়েছে`);
+                                setSelectedIds([]);
+                                fetchData();
+                            } catch (error) {
+                                console.error('Bulk payment update error:', error);
+                                toast.error('পেমেন্ট আপডেট ব্যর্থ হয়েছে');
+                            }
+                        }}
+                        className={`px-4 py-2 text-white rounded-lg text-sm font-bold transition-colors shadow-lg ${status
+                            ? 'bg-green-600 hover:bg-green-700 shadow-green-500/30'
+                            : 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/30'
+                            }`}
+                    >
+                        হ্যাঁ, আপডেট করুন
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+            style: {
+                background: '#fff',
+                padding: '24px',
+                borderRadius: '20px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                border: '2px solid #e2e8f0'
+            },
+        });
     };
 
     const handleAddExpense = async (e) => {
@@ -133,20 +277,49 @@ const AdminDashboard = () => {
         }
     };
 
-    const handleDeleteExpense = async (id) => {
-        if (!confirm('আপনি কি নিশ্চিত যে এই খরচটি মুছে ফেলতে চান?')) {
-            return;
-        }
-
-        try {
-            await api.delete(`/picnic/expenses/${id}`);
-
-            toast.success('🗑️ খরচ মুছে ফেলা হয়েছে');
-            fetchData();
-        } catch (error) {
-            console.error('Delete expense error:', error);
-            toast.error('খরচ মুছতে ব্যর্থ হয়েছে');
-        }
+    const handleDeleteExpense = (id) => {
+        toast((t) => (
+            <div className="flex flex-col gap-3 min-w-[280px]">
+                <div>
+                    <p className="font-bold text-gray-800 text-lg">খরচ মুছতে চান?</p>
+                    <p className="text-sm text-gray-500 font-medium">আপনি কি নিশ্চিত যে আপনি এই খরচটি মুছে ফেলতে চান?</p>
+                </div>
+                <div className="flex gap-3 justify-end mt-1">
+                    <button
+                        onClick={() => toast.dismiss(t.id)}
+                        className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-bold transition-colors"
+                    >
+                        না
+                    </button>
+                    <button
+                        onClick={async () => {
+                            toast.dismiss(t.id);
+                            try {
+                                await api.delete(`/picnic/expenses/${id}`);
+                                toast.success('🗑️ খরচ মুছে ফেলা হয়েছে');
+                                fetchData();
+                            } catch (error) {
+                                console.error('Delete expense error:', error);
+                                toast.error('খরচ মুছতে ব্যর্থ হয়েছে');
+                            }
+                        }}
+                        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-bold transition-colors shadow-lg shadow-red-500/30"
+                    >
+                        হ্যাঁ, মুছুন
+                    </button>
+                </div>
+            </div>
+        ), {
+            duration: Infinity,
+            position: 'top-center',
+            style: {
+                background: '#fff',
+                padding: '24px',
+                borderRadius: '20px',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                border: '2px solid #fee2e2'
+            },
+        });
     };
 
     const toggleSelection = (id) => {
@@ -193,11 +366,24 @@ const AdminDashboard = () => {
         <div ref={dashboardRef} className="min-h-screen bg-gray-50 py-8 px-4">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="mb-8">
-                    <h1 className="text-4xl md:text-5xl font-black text-center md:text-left text-black mb-2">
-                        🌸 Admin Dashboard
-                    </h1>
-                    <p className="text-xl text-center md:text-left text-black font-bold">চড়ুইভাতি – ২০২৬ | ICE Department</p>
+                <div className="mb-8 p-6 bg-white rounded-3xl shadow-sm border border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-emerald-100 rounded-2xl">
+                            <LayoutDashboard className="w-8 h-8 text-emerald-700" />
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-black text-gray-800">
+                                Admin Dashboard
+                            </h1>
+                            <p className="text-gray-500 font-medium">চড়ুইভাতি – ২০২৬ | ICE Department</p>
+                        </div>
+                    </div>
+                    <div className="flex gap-3">
+                        <div className="px-4 py-2 bg-emerald-50 text-emerald-700 rounded-xl font-bold border border-emerald-100 flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Live System
+                        </div>
+                    </div>
                 </div>
 
                 {/* Financial Summary Cards */}
@@ -294,6 +480,18 @@ const AdminDashboard = () => {
                         toggleSelectAll={toggleSelectAll}
                         handlePaymentStatusUpdate={handlePaymentStatusUpdate}
                         handleBulkPaymentUpdate={handleBulkPaymentUpdate}
+                        handleDeleteRegistration={handleDeleteRegistration}
+                        onEdit={openEditModal}
+                    />
+                )}
+
+                {/* Edit Modal */}
+                {showEditModal && (
+                    <EditRegistrationModal
+                        isOpen={showEditModal}
+                        registration={editingRegistration}
+                        onClose={() => setShowEditModal(false)}
+                        onUpdate={handleEditRegistration}
                     />
                 )}
 

@@ -1,4 +1,4 @@
-# 🌸 চড়ুইভাতি – ২০২৬ | ICE Department Picnic Management System
+# চড়ুইভাতি – ২০২৬ | ICE Department Picnic Management System
 
 A premium, full-stack web application for managing the ICE Department picnic registration, payments, and expenses with a beautiful Bangladeshi-themed UI.
 
