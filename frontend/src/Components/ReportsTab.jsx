@@ -1,58 +1,70 @@
 import { useState } from 'react';
 import { Download, FileText, Users, DollarSign } from 'lucide-react';
+import * as XLSX from 'xlsx';
 
 const ReportsTab = ({ registrations, expenses, financials, batches }) => {
     const [selectedBatch, setSelectedBatch] = useState('');
 
-    const generateRegistrationCSV = (batch = '') => {
+    const generateRegistrationExcel = (batch = '') => {
         const data = batch
             ? registrations.filter(r => r.batch === batch)
             : registrations;
 
-        const headers = ['নাম', 'ডিপার্টমেন্ট', 'ব্যাচ', 'মোবাইল', 'ইমেইল', 'পেমেন্ট স্ট্যাটাস'];
-        const rows = data.map(r => [
-            r.name,
-            r.department,
-            r.batch,
-            r.mobile,
-            r.email,
-            r.paymentStatus ? 'পেইড' : 'আনপেইড'
-        ]);
+        const excelData = data.map(r => ({
+            'নাম': r.name,
+            'ডিপার্টমেন্ট': r.department,
+            'ব্যাচ': r.batch,
+            'মোবাইল': r.mobile,
+            'ইমেইল': r.email,
+            'পেমেন্ট স্ট্যাটাস': r.paymentStatus ? 'পেইড' : 'আনপেইড'
+        }));
 
-        const csvContent = [
-            headers.join(','),
-            ...rows.map(row => row.join(','))
-        ].join('\n');
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Registrations");
 
-        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `registrations${batch ? `_${batch}` : ''}_${new Date().toISOString().split('T')[0]}.csv`;
-        link.click();
-    };
-
-    const generateFinancialReport = () => {
-        const headers = ['বিবরণ', 'পরিমাণ'];
-        const rows = [
-            ['মোট পেইড ব্যবহারকারী', financials.paidUsers],
-            ['মোট সংগৃহীত (৳)', financials.totalCollected],
-            ['মোট খরচ (৳)', financials.totalExpenses],
-            ['অবশিষ্ট ব্যালেন্স (৳)', financials.remainingBalance],
-            [''],
-            ['খরচের বিস্তারিত', ''],
-            ...expenses.map(e => [e.title, e.amount])
+        // Auto-width for columns
+        const maxWidth = excelData.reduce((w, r) => Math.max(w, r['নাম'].length), 10);
+        worksheet['!cols'] = [
+            { wch: maxWidth + 5 }, // Name
+            { wch: 15 }, // Department
+            { wch: 10 }, // Batch
+            { wch: 15 }, // Mobile
+            { wch: 25 }, // Email
+            { wch: 15 }  // Status
         ];
 
-        const csvContent = [
-            headers.join(','),
-            ...rows.map(row => row.join(','))
-        ].join('\n');
+        XLSX.writeFile(workbook, `registrations${batch ? `_${batch}` : ''}_${new Date().toISOString().split('T')[0]}.xlsx`);
+    };
 
-        const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `financial_report_${new Date().toISOString().split('T')[0]}.csv`;
-        link.click();
+    const generateFinancialExcel = () => {
+        const summaryData = [
+            { 'বিবরণ': 'মোট পেইড ব্যবহারকারী', 'পরিমাণ': financials.paidUsers },
+            { 'বিবরণ': 'মোট সংগৃহীত (৳)', 'পরিমাণ': financials.totalCollected },
+            { 'বিবরণ': 'মোট খরচ (৳)', 'পরিমাণ': financials.totalExpenses },
+            { 'বিবরণ': 'অবশিষ্ট ব্যালেন্স (৳)', 'পরিমাণ': financials.remainingBalance }
+        ];
+
+        const expenseData = expenses.map(e => ({
+            'খরচের বিবরণ': e.title,
+            'পরিমাণ (৳)': e.amount
+        }));
+
+        const wb = XLSX.utils.book_new();
+
+        // Summary Sheet
+        const wsSummary = XLSX.utils.json_to_sheet(summaryData);
+        XLSX.utils.book_append_sheet(wb, wsSummary, "Financial Summary");
+        wsSummary['!cols'] = [{ wch: 30 }, { wch: 15 }];
+
+        // Expenses Sheet
+        if (expenseData.length > 0) {
+            const wsExpenses = XLSX.utils.json_to_sheet(expenseData);
+            XLSX.utils.book_append_sheet(wb, wsExpenses, "Expense Details");
+            wsExpenses['!cols'] = [{ wch: 40 }, { wch: 15 }];
+        }
+
+        XLSX.writeFile(wb, `financial_report_${new Date().toISOString().split('T')[0]}.xlsx`);
     };
 
     const paidRegistrations = registrations.filter(r => r.paymentStatus);
@@ -115,7 +127,7 @@ const ReportsTab = ({ registrations, expenses, financials, batches }) => {
                     <div className="space-y-4">
                         {/* All Registrations */}
                         <button
-                            onClick={() => generateRegistrationCSV()}
+                            onClick={() => generateRegistrationExcel()}
                             className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl hover:from-emerald-100 hover:to-teal-100 transition-all border border-emerald-200"
                         >
                             <div className="flex items-center gap-3">
@@ -125,7 +137,7 @@ const ReportsTab = ({ registrations, expenses, financials, batches }) => {
                                     <p className="text-sm text-gray-600">{registrations.length} জন</p>
                                 </div>
                             </div>
-                            <span className="text-emerald-600 font-bold">CSV ডাউনলোড</span>
+                            <span className="text-emerald-600 font-bold">Excel ডাউনলোড</span>
                         </button>
 
                         {/* Batch-wise */}
@@ -143,11 +155,11 @@ const ReportsTab = ({ registrations, expenses, financials, batches }) => {
                                     ))}
                                 </select>
                                 <button
-                                    onClick={() => selectedBatch && generateRegistrationCSV(selectedBatch)}
+                                    onClick={() => selectedBatch && generateRegistrationExcel(selectedBatch)}
                                     disabled={!selectedBatch}
                                     className={`px-6 py-2 rounded-lg font-semibold transition-colors ${selectedBatch
-                                            ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-                                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        ? 'bg-emerald-600 text-white hover:bg-emerald-700'
+                                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                         }`}
                                 >
                                     <Download className="w-5 h-5" />
@@ -158,15 +170,19 @@ const ReportsTab = ({ registrations, expenses, financials, batches }) => {
                         {/* Paid Only */}
                         <button
                             onClick={() => {
-                                const data = paidRegistrations;
-                                const headers = ['নাম', 'ডিপার্টমেন্ট', 'ব্যাচ', 'মোবাইল', 'ইমেইল'];
-                                const rows = data.map(r => [r.name, r.department, r.batch, r.mobile, r.email]);
-                                const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
-                                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-                                const link = document.createElement('a');
-                                link.href = URL.createObjectURL(blob);
-                                link.download = `paid_registrations_${new Date().toISOString().split('T')[0]}.csv`;
-                                link.click();
+                                const data = paidRegistrations.map(r => ({
+                                    'নাম': r.name,
+                                    'ডিপার্টমেন্ট': r.department,
+                                    'ব্যাচ': r.batch,
+                                    'মোবাইল': r.mobile,
+                                    'ইমেইল': r.email,
+                                    'পেমেন্ট স্ট্যাটাস': 'পেইড'
+                                }));
+                                const ws = XLSX.utils.json_to_sheet(data);
+                                const wb = XLSX.utils.book_new();
+                                XLSX.utils.book_append_sheet(wb, ws, "Paid Registrations");
+                                ws['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 10 }, { wch: 15 }, { wch: 25 }, { wch: 10 }];
+                                XLSX.writeFile(wb, `paid_registrations_${new Date().toISOString().split('T')[0]}.xlsx`);
                             }}
                             className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all border border-green-200"
                         >
@@ -177,21 +193,25 @@ const ReportsTab = ({ registrations, expenses, financials, batches }) => {
                                     <p className="text-sm text-gray-600">{paidRegistrations.length} জন</p>
                                 </div>
                             </div>
-                            <span className="text-green-600 font-bold">CSV ডাউনলোড</span>
+                            <span className="text-green-600 font-bold">Excel ডাউনলোড</span>
                         </button>
 
                         {/* Unpaid Only */}
                         <button
                             onClick={() => {
-                                const data = unpaidRegistrations;
-                                const headers = ['নাম', 'ডিপার্টমেন্ট', 'ব্যাচ', 'মোবাইল', 'ইমেইল'];
-                                const rows = data.map(r => [r.name, r.department, r.batch, r.mobile, r.email]);
-                                const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
-                                const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
-                                const link = document.createElement('a');
-                                link.href = URL.createObjectURL(blob);
-                                link.download = `unpaid_registrations_${new Date().toISOString().split('T')[0]}.csv`;
-                                link.click();
+                                const data = unpaidRegistrations.map(r => ({
+                                    'নাম': r.name,
+                                    'ডিপার্টমেন্ট': r.department,
+                                    'ব্যাচ': r.batch,
+                                    'মোবাইল': r.mobile,
+                                    'ইমেইল': r.email,
+                                    'পেমেন্ট স্ট্যাটাস': 'আনপেইড'
+                                }));
+                                const ws = XLSX.utils.json_to_sheet(data);
+                                const wb = XLSX.utils.book_new();
+                                XLSX.utils.book_append_sheet(wb, ws, "Unpaid Registrations");
+                                ws['!cols'] = [{ wch: 20 }, { wch: 15 }, { wch: 10 }, { wch: 15 }, { wch: 25 }, { wch: 10 }];
+                                XLSX.writeFile(wb, `unpaid_registrations_${new Date().toISOString().split('T')[0]}.xlsx`);
                             }}
                             className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl hover:from-orange-100 hover:to-red-100 transition-all border border-orange-200"
                         >
@@ -202,7 +222,7 @@ const ReportsTab = ({ registrations, expenses, financials, batches }) => {
                                     <p className="text-sm text-gray-600">{unpaidRegistrations.length} জন</p>
                                 </div>
                             </div>
-                            <span className="text-orange-600 font-bold">CSV ডাউনলোড</span>
+                            <span className="text-orange-600 font-bold">Excel ডাউনলোড</span>
                         </button>
                     </div>
                 </div>
@@ -242,7 +262,7 @@ const ReportsTab = ({ registrations, expenses, financials, batches }) => {
 
                         {/* Download Button */}
                         <button
-                            onClick={generateFinancialReport}
+                            onClick={generateFinancialExcel}
                             className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-xl hover:shadow-lg transition-all"
                         >
                             <div className="flex items-center gap-3">
@@ -252,7 +272,7 @@ const ReportsTab = ({ registrations, expenses, financials, batches }) => {
                                     <p className="text-sm text-teal-100">সকল তথ্য সহ</p>
                                 </div>
                             </div>
-                            <span className="font-bold">CSV ডাউনলোড</span>
+                            <span className="font-bold">Excel ডাউনলোড</span>
                         </button>
 
                         {/* Expense Breakdown */}
