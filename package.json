@@ -1,7 +1,7 @@
 {
-  "name": "picnic",
+  "name": "iftar-party",
   "version": "1.0.0",
-  "description": "A premium, full-stack web application for managing the ICE Department picnic registration, payments, and expenses with a beautiful Bangladeshi-themed UI.",
+  "description": "A premium, full-stack web application for managing the ICE Department iftar party registration, payments, and expenses with a beautiful Bangladeshi-themed UI.",
   "main": "index.js",
   "scripts": {
     "build": "npm install --prefix Backend --include=dev && npm install --prefix frontend --include=dev && npm run build --prefix frontend && npm run build --prefix Backend",

@@ -78,7 +78,7 @@ const PicnicSuccessPage = () => {
                             🎉 রেজিস্ট্রেশন সফল হয়েছে! 🎉
                         </h1>
                         <p className="text-xl text-emerald-100">
-                            চড়ুইভাতি – ২০২৬ | ICE Department
+                            ইফতার পার্টি – ২০২৬ | ICE Department
                         </p>
                     </div>
 
@@ -169,7 +169,7 @@ const PicnicSuccessPage = () => {
                         {/* Success Message */}
                         <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-8 text-center text-white mb-6">
                             <p className="text-xl md:text-2xl font-bold leading-relaxed">
-                                আমরা চড়ুইভাতি – ২০২৬ এ<br />
+                                আমরা ইফতার পার্টি – ২০২৬ এ<br />
                                 আপনাকে স্বাগতম জানাচ্ছি! 🌿
                             </p>
                         </div>

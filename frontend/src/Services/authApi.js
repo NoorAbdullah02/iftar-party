@@ -9,10 +9,11 @@ export const registerUser = async (userData) => {
 export const checkEmailExists = async (email) => {
     try {
         const response = await api.post('/app/check-email', { email });
-        return response.data.exists;
+        // returns { exists: boolean, isEmailVerified: boolean }
+        return response.data;
     } catch (err) {
         if (err.response?.status === 409) {
-            return true;
+            return { exists: true, isEmailVerified: false };
         }
         throw err;
     }

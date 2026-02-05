@@ -172,7 +172,7 @@ const sendRegistrationEmail = async (registration: any) => {
 <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #10b981 0%, #047857 100%); padding: 40px 20px;">
     <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
         <div style="background: linear-gradient(135deg, #10b981 0%, #047857 100%); padding: 40px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 32px;">🌸 চড়ুইভাতি – ২০২৬ 🌸</h1>
+            <h1 style="color: white; margin: 0; font-size: 32px;">🌸 ইফতার পার্টি – ২০২৬ 🌸</h1>
             <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0; font-size: 16px;">ICE Department | Information & Communication Engineering</p>
         </div>
         
@@ -180,7 +180,7 @@ const sendRegistrationEmail = async (registration: any) => {
             <h2 style="color: #2d3748; margin: 0 0 20px;">🎉 রেজিস্ট্রেশন সফল হয়েছে!</h2>
             <p style="color: #4a5568; line-height: 1.6; margin-bottom: 30px;">
                 প্রিয় <strong>${registration.name}</strong>,<br><br>
-                আপনার চড়ুইভাতি – ২০২৬ রেজিস্ট্রেশন সফলভাবে গ্রহণ করা হয়েছে। আপনার তথ্য নিচে দেওয়া হলো:
+                আপনার ইফতার পার্টি – ২০২৬ রেজিস্ট্রেশন সফলভাবে গ্রহণ করা হয়েছে। আপনার তথ্য নিচে দেওয়া হলো:
             </p>
             
             <div style="background: #f7fafc; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
@@ -228,7 +228,7 @@ const sendRegistrationEmail = async (registration: any) => {
 </html>`;
 
     try {
-        await sendMail(registration.email, '🌸 চড়ুইভাতি – ২০২৬ | রেজিস্ট্রেশন নিশ্চিতকরণ', html);
+        await sendMail(registration.email, '🌸 ইফতার পার্টি – ২০২৬ | রেজিস্ট্রেশন নিশ্চিতকরণ', html);
     } catch (error) {
         console.error('Error sending registration email:', error);
     }
@@ -253,7 +253,7 @@ const sendPaymentConfirmationEmail = async (registration: any) => {
             <h2 style="color: #2d3748; margin: 0 0 20px;">প্রিয় ${registration.name},</h2>
             <p style="color: #4a5568; line-height: 1.8; font-size: 16px; margin-bottom: 30px;">
                 আপনার পেমেন্ট সফলভাবে সম্পন্ন হয়েছে।<br>
-                <strong style="color: #10b981; font-size: 20px;">আমরা চড়ুইভাতি – ২০২৬ এ আপনাকে স্বাগতম জানাচ্ছি! 🌿</strong>
+                <strong style="color: #10b981; font-size: 20px;">আমরা ইফতার পার্টি – ২০২৬ এ আপনাকে স্বাগতম জানাচ্ছি! 🌿</strong>
             </p>
             
             <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border-radius: 12px; padding: 30px; margin-bottom: 30px;">
@@ -273,7 +273,7 @@ const sendPaymentConfirmationEmail = async (registration: any) => {
 </html>`;
 
     try {
-        await sendMail(registration.email, '✅ চড়ুইভাতি – ২০২৬ | পেমেন্ট নিশ্চিতকরণ', html);
+        await sendMail(registration.email, '✅ ইফতার পার্টি – ২০২৬ | পেমেন্ট নিশ্চিতকরণ', html);
     } catch (error) {
         console.error('Error sending payment confirmation email:', error);
     }

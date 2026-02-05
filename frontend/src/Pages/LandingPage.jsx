@@ -32,7 +32,7 @@ const LandingPage = () => {
                     {/* Title */}
                     <div className="mb-10 bg-white/95 backdrop-blur-sm p-8 rounded-3xl border border-green-200 shadow-sm inline-block">
                         <h1 className="text-6xl md:text-7xl lg:text-8xl font-black text-black mb-4 leading-tight">
-                            চড়ুইভাতি – ২০২৬
+                            ইফতার পার্টি – ২০২৬
                         </h1>
                         <div className="space-y-4 py-2">
                             <p className="text-3xl md:text-4xl font-black text-black">ICE Department</p>
@@ -53,7 +53,7 @@ const LandingPage = () => {
                     {/* CTA Buttons */}
                     <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
                         <button
-                            onClick={() => navigate('/picnic-register')}
+                            onClick={() => navigate('/iftar-register')}
                             className="bg-green-800 text-white px-10 py-5 rounded-xl font-bold text-2xl shadow-lg hover:bg-green-900 transition-colors border-2 border-green-700 w-full sm:w-auto"
                         >
                             👉 রেজিস্ট্রেশন করুন
@@ -125,8 +125,8 @@ const LandingPage = () => {
                             >
                                 <X className="w-8 h-8 text-white drop-shadow-md" />
                             </button>
-                            <h2 className="text-5xl font-black mb-3 drop-shadow-lg">🍽️ পিকনিক খাবারের মেনু</h2>
-                            <p className="text-green-100 text-xl font-semibold">চড়ুইভাতি – ২০২৬ | ICE Department</p>
+                            <h2 className="text-5xl font-black mb-3 drop-shadow-lg">🍽️ ইফতারের খাবারের মেনু</h2>
+                            <p className="text-green-100 text-xl font-semibold">ইফতার পার্টি – ২০২৬ | ICE Department</p>
                         </div>
 
                         {/* Menu Grid */}

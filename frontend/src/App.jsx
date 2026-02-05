@@ -30,8 +30,8 @@ const App = () => {
           <Toaster position="top-right" />
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/picnic-register" element={<PicnicRegisterPage />} />
-            <Route path="/picnic-success" element={<PicnicSuccessPage />} />
+            <Route path="/iftar-register" element={<PicnicRegisterPage />} />
+            <Route path="/iftar-success" element={<PicnicSuccessPage />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />

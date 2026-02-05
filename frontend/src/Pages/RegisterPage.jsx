@@ -58,9 +58,13 @@ const RegisterPage = () => {
 
         setCheckingEmail(true);
         try {
-            const exists = await checkEmailExists(value);
-            if (exists) {
-                setEmailError('Email already registered. Please use a different email.');
+            const res = await checkEmailExists(value); // { exists, isEmailVerified }
+            if (res?.exists) {
+                if (res.isEmailVerified) {
+                    setEmailError('Email already registered. Please use a different email.');
+                } else {
+                    setEmailError('Email already registered but not verified. Please verify your email or resend the code.');
+                }
             } else {
                 setEmailError('');
             }

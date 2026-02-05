@@ -145,9 +145,9 @@ export const checkEmailExists = async (req: Request, res: Response) => {
         const user = await queries.getUserByEmail(email);
 
         if (user) {
-            return res.status(200).json({ exists: true });
+            return res.status(200).json({ exists: true, isEmailVerified: !!user.isEmailVerified });
         } else {
-            return res.status(200).json({ exists: false });
+            return res.status(200).json({ exists: false, isEmailVerified: false });
         }
     }
     catch (error) {

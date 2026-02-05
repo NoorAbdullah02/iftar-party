@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, User, LogOut, LayoutDashboard, Home, UserPlus } from 'lucide-react';
+import { Menu, X, User, LogOut, LayoutDashboard, Home } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { logoutUser } from '../Services/authApi.js';
 
@@ -41,7 +41,7 @@ const Header = () => {
                         </div>
                         <div className="hidden md:block">
                             <h1 className="text-2xl font-bold text-white leading-tight drop-shadow-md">
-                                চড়ুইভাতি – ২০২৬
+                                ইফতার পার্টি – ২০২৬
                             </h1>
                             <p className="text-sm text-green-100 font-medium">ICE Department</p>
                         </div>
@@ -62,8 +62,8 @@ const Header = () => {
 
                         {!isLoggedIn && (
                             <Link
-                                to="/picnic-register"
-                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all duration-300 ${isActive('/picnic-register')
+                                to="/iftar-register"
+                                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold transition-all duration-300 ${isActive('/iftar-register')
                                     ? 'bg-white text-green-800 shadow-xl'
                                     : 'bg-green-700 text-white hover:bg-green-600 border border-green-500'
                                     }`}
@@ -147,9 +147,9 @@ const Header = () => {
 
                             {!isLoggedIn && (
                                 <Link
-                                    to="/picnic-register"
+                                    to="/iftar-register"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className={`flex items-center gap-3 px-5 py-3.5 rounded-xl font-bold transition-all duration-300 ${isActive('/picnic-register')
+                                    className={`flex items-center gap-3 px-5 py-3.5 rounded-xl font-bold transition-all duration-300 ${isActive('/iftar-register')
                                         ? 'bg-white text-green-800 shadow-lg'
                                         : 'bg-green-700 text-white hover:bg-green-600 border border-green-500'
                                         }`}

@@ -67,7 +67,7 @@ const PicnicRegisterPage = () => {
         try {
             const finalBatch = formData.batch === 'Others' ? otherBatch : formData.batch;
 
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/picnic/register`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/iftar/register`, {
                 ...formData,
                 batch: finalBatch
             });
@@ -76,7 +76,7 @@ const PicnicRegisterPage = () => {
                 toast.success('🎉 রেজিস্ট্রেশন সফল হয়েছে!');
 
                 // Navigate to success page with data
-                navigate('/picnic-success', {
+                navigate('/iftar-success', {
                     state: {
                         registration: response.data.data
                     }
@@ -105,7 +105,7 @@ const PicnicRegisterPage = () => {
                     <h1 className="text-5xl md:text-6xl font-black text-black mb-3">
                         🌸 রেজিস্ট্রেশন ফর্ম 🌸
                     </h1>
-                    <p className="text-xl text-black font-bold">চড়ুইভাতি – ২০২৬ | ICE Department</p>
+                    <p className="text-xl text-black font-bold">ইফতার পার্টি – ২০২৬ | ICE Department</p>
                 </div>
 
                 {/* Form Card */}

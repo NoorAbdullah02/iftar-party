@@ -40,7 +40,7 @@ app.get('/check', (req, res) => {
 
 
 app.use("/api/app", userRoute);
-app.use("/api/picnic", picnicRoute);
+app.use("/api/iftar", picnicRoute);
 
 
 

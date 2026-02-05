@@ -72,8 +72,7 @@ const EmailVerificationPage = () => {
       }, 3000);
     } catch (err) {
       console.error('Verification error:', err);
-      const errorMessage = err?.response?.data?.message || err.message || 'Verification failed. Please check your code and try again.';
-      setError(errorMessage);
+      setError('Unable to verify email. Please try again.');
     } finally {
       setIsVerifying(false);
     }
@@ -117,8 +116,7 @@ const EmailVerificationPage = () => {
       }, 8000);
     } catch (err) {
       console.error('Resend error:', err);
-      const errorMessage = err?.response?.data?.message || err.message || 'Failed to resend verification email';
-      setError(errorMessage);
+      setError('Unable to verify email. Please try again.');
     } finally {
       setIsResending(false);
     }

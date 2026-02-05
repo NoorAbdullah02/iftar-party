@@ -67,9 +67,9 @@ const AdminDashboard = () => {
             };
 
             const [regsRes, expsRes, finRes] = await Promise.all([
-                api.get('/picnic/registrations'),
-                api.get('/picnic/expenses'),
-                api.get('/picnic/financials')
+                api.get('/iftar/registrations'),
+                api.get('/iftar/expenses'),
+                api.get('/iftar/financials')
             ]);
 
             setRegistrations(regsRes.data.data || []);
@@ -103,7 +103,7 @@ const AdminDashboard = () => {
                         onClick={async () => {
                             toast.dismiss(t.id);
                             try {
-                                await api.patch(`/picnic/registrations/${id}/payment`, { status });
+                                await api.patch(`/iftar/registrations/${id}/payment`, { status });
                                 toast.success(status ? '✅ পেমেন্ট সম্পন্ন চিহ্নিত করা হয়েছে' : '❌ পেমেন্ট বাতিল করা হয়েছে');
                                 fetchData();
                             } catch (error) {
@@ -151,7 +151,7 @@ const AdminDashboard = () => {
                         onClick={async () => {
                             toast.dismiss(t.id);
                             try {
-                                await api.delete(`/picnic/registrations/${id}`);
+                                await api.delete(`/iftar/registrations/${id}`);
                                 toast.success('🗑️ রেজিস্ট্রেশন সফলভাবে মুছে ফেলা হয়েছে');
                                 fetchData();
                             } catch (error) {
@@ -180,7 +180,7 @@ const AdminDashboard = () => {
 
     const handleEditRegistration = async (id, data) => {
         try {
-            await api.put(`/picnic/registrations/${id}`, data);
+            await api.put(`/iftar/registrations/${id}`, data);
             toast.success('✏️ রেজিস্ট্রেশন আপডেট করা হয়েছে');
             setShowEditModal(false);
             setEditingRegistration(null);
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
                         onClick={async () => {
                             toast.dismiss(t.id);
                             try {
-                                await api.patch('/picnic/registrations/payment/bulk', { ids: selectedIds, status });
+                                await api.patch('/iftar/registrations/payment/bulk', { ids: selectedIds, status });
                                 toast.success(`✅ ${selectedIds.length} জনের পেমেন্ট আপডেট করা হয়েছে`);
                                 setSelectedIds([]);
                                 fetchData();
@@ -261,7 +261,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            await api.post('/picnic/expenses', {
+            await api.post('/iftar/expenses', {
                 title: expenseData.title,
                 amount: Number(expenseData.amount),
                 note: expenseData.note
@@ -295,7 +295,7 @@ const AdminDashboard = () => {
                         onClick={async () => {
                             toast.dismiss(t.id);
                             try {
-                                await api.delete(`/picnic/expenses/${id}`);
+                                await api.delete(`/iftar/expenses/${id}`);
                                 toast.success('🗑️ খরচ মুছে ফেলা হয়েছে');
                                 fetchData();
                             } catch (error) {
@@ -375,7 +375,7 @@ const AdminDashboard = () => {
                             <h1 className="text-3xl font-black text-gray-800">
                                 Admin Dashboard
                             </h1>
-                            <p className="text-gray-500 font-medium">চড়ুইভাতি – ২০২৬ | ICE Department</p>
+                            <p className="text-gray-500 font-medium">ইফতার পার্টি – ২০২৬ | ICE Department</p>
                         </div>
                     </div>
                     <div className="flex gap-3">

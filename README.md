@@ -1,6 +1,6 @@
-# চড়ুইভাতি – ২০২৬ | ICE Department Picnic Management System
+# ইফতার পার্টি – ২০২৬ | ICE Department Iftar Party Management System
 
-A premium, full-stack web application for managing the ICE Department picnic registration, payments, and expenses with a beautiful Bangladeshi-themed UI.
+A premium, full-stack web application for managing the ICE Department iftar party registration, payments, and expenses with a beautiful Bangladeshi-themed UI.
 
 ## ✨ Features
 
@@ -80,7 +80,7 @@ npm install
 3. Configure environment variables in `.env`:
 ```env
 # Database
-DATABASE_URL=postgresql://user:password@localhost:5432/picnic_db
+DATABASE_URL=postgresql://user:password@localhost:5432/iftar_db
 
 # JWT
 JWT_SECRET=your-super-secret-jwt-key-here
@@ -200,17 +200,17 @@ Both templates feature:
 ## 📱 API Endpoints
 
 ### Public Routes
-- `POST /api/picnic/register` - Register for picnic
+- `POST /api/iftar/register` - Register for iftar
 
 ### Protected Admin Routes
-- `GET /api/picnic/registrations` - Get all registrations
-- `GET /api/picnic/registrations/:id` - Get single registration
-- `PATCH /api/picnic/registrations/:id/payment` - Update payment status
-- `PATCH /api/picnic/registrations/payment/bulk` - Bulk payment update
-- `POST /api/picnic/expenses` - Add expense
-- `GET /api/picnic/expenses` - Get all expenses
-- `DELETE /api/picnic/expenses/:id` - Delete expense
-- `GET /api/picnic/financials` - Get financial summary
+- `GET /api/iftar/registrations` - Get all registrations
+- `GET /api/iftar/registrations/:id` - Get single registration
+- `PATCH /api/iftar/registrations/:id/payment` - Update payment status
+- `PATCH /api/iftar/registrations/payment/bulk` - Bulk payment update
+- `POST /api/iftar/expenses` - Add expense
+- `GET /api/iftar/expenses` - Get all expenses
+- `DELETE /api/iftar/expenses/:id` - Delete expense
+- `GET /api/iftar/financials` - Get financial summary
 
 ## 🎯 Key Calculations
 
@@ -268,11 +268,11 @@ This project is created for ICE Department, NSTU.
 
 ## 👥 Credits
 
-Developed with ❤️ for **চড়ুইভাতি – ২০২৬**
+Developed with ❤️ for **ইফতার পার্টি – ২০২৬**
 
 **ICE Department**  
 Information & Communication Engineering
 
 ---
 
-🌸 **আমরা চড়ুইভাতি – ২০২৬ এ আপনাকে স্বাগতম জানাচ্ছি!** 🌿
+🌸 **আমরা ইফতার পার্টি – ২০২৬ এ আপনাকে স্বাগতম জানাচ্ছি!** 🌿
