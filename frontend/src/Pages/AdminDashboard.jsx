@@ -407,7 +407,7 @@ const AdminDashboard = () => {
                                 <p className="text-4xl font-black count-up">৳{financials.totalCollected}</p>
                             </div>
                         </div>
-                        <p className="text-teal-100 text-sm font-medium">{financials.paidUsers} × ৪৫০ টাকা</p>
+                        <p className="text-teal-100 text-sm font-medium">{financials.paidUsers} × ১৫০ টাকা</p>
                     </div>
 
                     <div className="stat-card bg-orange-600 rounded-2xl p-6 text-white shadow-xl">

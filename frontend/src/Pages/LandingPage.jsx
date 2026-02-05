@@ -45,7 +45,7 @@ const LandingPage = () => {
                         <div className="bg-emerald-700 text-white px-12 py-6 rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300 border-4 border-emerald-500">
                             <p className="text-3xl md:text-4xl font-bold flex items-center justify-center gap-3">
                                 <span>🎫</span>
-                                <span className="text-white">রেজিস্ট্রেশন ফি: ৪৫০ টাকা</span>
+                                <span className="text-white">রেজিস্ট্রেশন ফি: ১৫০ টাকা</span>
                             </p>
                         </div>
                     </div>

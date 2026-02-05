@@ -29,6 +29,7 @@ app.use(cors({
 app.use(cookieParser());
 app.use(requestIp.mw());
 
+
 app.get('/check', (req, res) => {
     res.json({
         message: "WellCome to Product Store",
@@ -63,3 +64,4 @@ if (env.NODE_ENV === 'production') {
 app.listen(env.PORT, () => {
     console.log(`Server is running on port ${env.PORT}`);
 })
+

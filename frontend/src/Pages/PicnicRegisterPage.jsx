@@ -232,7 +232,7 @@ const PicnicRegisterPage = () => {
                         {/* Fee Display */}
                         <div className="bg-gradient-to-r from-emerald-100 to-teal-100 rounded-2xl p-6 text-center">
                             <p className="text-black text-lg mb-2 font-bold">রেজিস্ট্রেশন ফি</p>
-                            <p className="text-4xl font-black text-black">৪৫০ টাকা</p>
+                            <p className="text-4xl font-black text-black">১৫০ টাকা</p>
                         </div>
 
                         {/* Submit Button */}

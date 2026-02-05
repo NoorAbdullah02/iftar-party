@@ -207,7 +207,7 @@ const sendRegistrationEmail = async (registration: any) => {
                     </tr>
                     <tr>
                         <td style="padding: 10px 0; color: #718096; font-weight: 600;">ফি:</td>
-                        <td style="padding: 10px 0; color: #2d3748; font-weight: 700; font-size: 18px;">৪৫০ টাকা</td>
+                        <td style="padding: 10px 0; color: #2d3748; font-weight: 700; font-size: 18px;">১৫০ টাকা</td>
                     </tr>
                 </table>
             </div>
