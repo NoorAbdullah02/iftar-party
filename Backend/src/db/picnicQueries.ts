@@ -1,5 +1,5 @@
 import { db } from './index';
-import { eq, desc, sql } from 'drizzle-orm';
+import { eq, desc, sql, like } from 'drizzle-orm';
 import { registrations, expenses } from './schema';
 import type { newRegistration, newExpense } from './schema';
 import { sendMail } from '../lib/send-email';
@@ -95,6 +95,13 @@ export const getPaidRegistrationsCount = async () => {
         .from(registrations)
         .where(eq(registrations.paymentStatus, true));
     return Number(result[0]?.count || 0);
+};
+
+export const searchByTransactionId = async (transactionId: string) => {
+    return db.select()
+        .from(registrations)
+        .where(like(registrations.transactionId, `%${transactionId}%`))
+        .orderBy(desc(registrations.createdAt));
 };
 
 export const getTotalCollectedAmount = async () => {

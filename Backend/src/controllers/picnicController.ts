@@ -15,14 +15,15 @@ import {
     getTotalCollectedAmount,
     getRemainingBalance,
     updateRegistration,
-    deleteRegistration
+    deleteRegistration,
+    searchByTransactionId
 } from '../db/picnicQueries';
 
 // ==================== REGISTRATION CONTROLLERS ====================
 
 export const registerForPicnic = async (req: Request, res: Response) => {
     try {
-        const { name, department, batch, mobile, email } = req.body;
+        const { name, department, batch, mobile, email, paymentMethod, paymentMedium, transactionId } = req.body;
 
         if (!name || !batch || !mobile || !email) {
             return res.status(400).json({
@@ -31,13 +32,44 @@ export const registerForPicnic = async (req: Request, res: Response) => {
             });
         }
 
+        // Default to cash if no payment method provided (for backward compatibility)
+        const finalPaymentMethod = paymentMethod || 'cash';
+
+        // Validate payment method
+        if (!['cash', 'online'].includes(finalPaymentMethod)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid payment method. Must be "cash" or "online"'
+            });
+        }
+
+        // If online payment, validate payment medium and transaction ID
+        if (finalPaymentMethod === 'online') {
+            if (!paymentMedium || !['bkash', 'nagad'].includes(paymentMedium)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'For online payment, payment medium must be "bkash" or "nagad"'
+                });
+            }
+
+            if (!transactionId || transactionId.trim() === '') {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Transaction ID is required for online payment'
+                });
+            }
+        }
+
         const registration = await createRegistration({
             name,
             department: department || 'ICE',
             batch,
             mobile,
             email,
-            paymentStatus: false
+            paymentStatus: false,
+            paymentMethod: finalPaymentMethod,
+            paymentMedium: finalPaymentMethod === 'online' ? paymentMedium : null,
+            transactionId: finalPaymentMethod === 'online' ? transactionId : null
         });
 
         res.status(201).json({
@@ -331,3 +363,33 @@ export const removeRegistration = async (req: Request, res: Response) => {
         });
     }
 };
+
+// ==================== SEARCH CONTROLLER ====================
+
+export const searchRegistrationsByTransactionId = async (req: Request, res: Response) => {
+    try {
+        const { transactionId } = req.query;
+
+        if (!transactionId || typeof transactionId !== 'string') {
+            return res.status(400).json({
+                success: false,
+                message: 'Transaction ID is required'
+            });
+        }
+
+        const registrations = await searchByTransactionId(transactionId);
+
+        res.status(200).json({
+            success: true,
+            data: registrations,
+            count: registrations.length
+        });
+    } catch (error: any) {
+        console.error('Search by transaction ID error:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Failed to search registrations'
+        });
+    }
+};
+

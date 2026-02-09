@@ -90,6 +90,9 @@ export const registrations = pgTable("registrations", {
     mobile: varchar("mobile", { length: 20 }).notNull(),
     email: varchar("email", { length: 255 }).notNull(),
     paymentStatus: boolean("payment_status").notNull().default(false),
+    paymentMethod: varchar("payment_method", { length: 50 }).default("cash"), // "cash" or "online", default to cash for existing records
+    paymentMedium: varchar("payment_medium", { length: 50 }), // "bkash", "nagad", or null for cash
+    transactionId: varchar("transaction_id", { length: 100 }), // Transaction ID for online payments, null for cash
     createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().notNull()
 });

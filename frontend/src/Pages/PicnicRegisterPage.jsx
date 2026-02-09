@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Phone, Mail, GraduationCap, Building2, ChevronDown } from 'lucide-react';
+import { User, Phone, Mail, GraduationCap, Building2, ChevronDown, Copy } from 'lucide-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
@@ -11,7 +11,10 @@ const PicnicRegisterPage = () => {
         department: 'ICE',
         batch: '',
         mobile: '',
-        email: ''
+        email: '',
+        paymentMethod: '', // 'cash' or 'online'
+        paymentMedium: '', // 'bkash' or 'nagad' (only for online)
+        transactionId: '' // Only for online payment
     });
     const [showOtherBatch, setShowOtherBatch] = useState(false);
     const [otherBatch, setOtherBatch] = useState('');
@@ -54,6 +57,20 @@ const PicnicRegisterPage = () => {
             toast.error('⚠️ সঠিক ইমেইল ঠিকানা লিখুন');
             return false;
         }
+        if (!formData.paymentMethod) {
+            toast.error('⚠️ পেমেন্ট পদ্ধতি নির্বাচন করুন');
+            return false;
+        }
+        if (formData.paymentMethod === 'online') {
+            if (!formData.paymentMedium) {
+                toast.error('⚠️ পেমেন্ট মাধ্যম নির্বাচন করুন (বিকাশ/নগদ)');
+                return false;
+            }
+            if (!formData.transactionId.trim()) {
+                toast.error('⚠️ ট্রানজেকশন আইডি লিখুন');
+                return false;
+            }
+        }
         return true;
     };
 
@@ -91,6 +108,14 @@ const PicnicRegisterPage = () => {
         }
     };
 
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            toast.success('📋 নম্বর কপি হয়েছে!');
+        }).catch(() => {
+            toast.error('❌ কপি করতে ব্যর্থ হয়েছে');
+        });
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-12 px-4 relative overflow-hidden">
             {/* Background Decorations */}
@@ -103,7 +128,7 @@ const PicnicRegisterPage = () => {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-5xl md:text-6xl font-black text-black mb-3">
-                        🌸 রেজিস্ট্রেশন ফর্ম 🌸
+                        রেজিস্ট্রেশন ফর্ম
                     </h1>
                     <p className="text-xl text-black font-bold">ইফতার পার্টি – ২০২৬ | ICE Department</p>
                 </div>
@@ -204,7 +229,7 @@ const PicnicRegisterPage = () => {
                                     type="tel"
                                     value={formData.mobile}
                                     onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                                    placeholder="01XXXXXXXXX"
+                                    placeholder="01748269350"
                                     className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-500 rounded-xl focus:outline-none focus:border-green-800 transition-all duration-300 text-lg text-black font-bold placeholder-gray-600"
                                     required
                                 />
@@ -227,6 +252,148 @@ const PicnicRegisterPage = () => {
                                     required
                                 />
                             </div>
+                        </div>
+
+                        {/* Payment Method Selection */}
+                        <div className="border-t-2 border-gray-300 pt-6">
+                            <label className="block text-black font-black mb-4 text-xl">
+                                💳 পেমেন্ট পদ্ধতি নির্বাচন করুন <span className="text-red-600">*</span>
+                            </label>
+
+                            <div className="space-y-4">
+                                {/* Cash Payment Option */}
+                                <div
+                                    onClick={() => setFormData({ ...formData, paymentMethod: 'cash', paymentMedium: '', transactionId: '' })}
+                                    className={`cursor-pointer p-5 rounded-xl border-2 transition-all duration-300 ${formData.paymentMethod === 'cash'
+                                        ? 'border-emerald-600 bg-emerald-50 shadow-lg'
+                                        : 'border-gray-300 bg-white hover:border-emerald-400'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'cash'
+                                            ? 'border-emerald-600 bg-emerald-600'
+                                            : 'border-gray-400'
+                                            }`}>
+                                            {formData.paymentMethod === 'cash' && (
+                                                <div className="w-3 h-3 bg-white rounded-full"></div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-lg font-black text-black">🔘 কমিটিতে নগদ প্রদান</p>
+                                            <p className="text-sm text-gray-600 font-medium mt-1">সরাসরি রেজিস্ট্রেশন সম্পন্ন করুন</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Online Payment Option */}
+                                <div
+                                    onClick={() => setFormData({ ...formData, paymentMethod: 'online' })}
+                                    className={`cursor-pointer p-5 rounded-xl border-2 transition-all duration-300 ${formData.paymentMethod === 'online'
+                                        ? 'border-blue-600 bg-blue-50 shadow-lg'
+                                        : 'border-gray-300 bg-white hover:border-blue-400'
+                                        }`}
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${formData.paymentMethod === 'online'
+                                            ? 'border-blue-600 bg-blue-600'
+                                            : 'border-gray-400'
+                                            }`}>
+                                            {formData.paymentMethod === 'online' && (
+                                                <div className="w-3 h-3 bg-white rounded-full"></div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-lg font-black text-black">🔘 অনলাইন পেমেন্ট</p>
+                                            <p className="text-sm text-gray-600 font-medium mt-1">বিকাশ বা নগদ এর মাধ্যমে</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Online Payment Details */}
+                            {formData.paymentMethod === 'online' && (
+                                <div className="mt-6 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border-2 border-blue-200 space-y-5">
+                                    {/* Payment Medium Selection - First Step */}
+                                    <div>
+                                        <label className="block text-black font-black mb-3 text-lg">
+                                            পেমেন্ট মাধ্যম নির্বাচন করুন <span className="text-red-600">*</span>
+                                        </label>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div
+                                                onClick={() => setFormData({ ...formData, paymentMedium: 'bkash' })}
+                                                className={`cursor-pointer p-4 rounded-xl border-2 text-center transition-all duration-300 ${formData.paymentMedium === 'bkash'
+                                                    ? 'border-pink-600 bg-pink-100 shadow-lg'
+                                                    : 'border-gray-300 bg-white hover:border-pink-400'
+                                                    }`}
+                                            >
+                                                <p className="text-2xl mb-2">📱</p>
+                                                <p className="font-black text-black">বিকাশ</p>
+                                            </div>
+                                            <div
+                                                onClick={() => setFormData({ ...formData, paymentMedium: 'nagad' })}
+                                                className={`cursor-pointer p-4 rounded-xl border-2 text-center transition-all duration-300 ${formData.paymentMedium === 'nagad'
+                                                    ? 'border-orange-600 bg-orange-100 shadow-lg'
+                                                    : 'border-gray-300 bg-white hover:border-orange-400'
+                                                    }`}
+                                            >
+                                                <p className="text-2xl mb-2">💳</p>
+                                                <p className="font-black text-black">নগদ</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Payment Number Display - Shows based on selected medium */}
+                                    {formData.paymentMedium && (
+                                        <div className={`bg-white rounded-xl p-5 text-center border-2 ${formData.paymentMedium === 'bkash' ? 'border-pink-300' : 'border-orange-300'
+                                            }`}>
+                                            <p className="text-black font-bold text-lg mb-2">
+                                                📱 পেমেন্ট নম্বর {formData.paymentMedium === 'bkash' ? '(বিকাশ)' : '(নগদ)'}
+                                            </p>
+                                            <div className="flex items-center justify-center gap-3">
+                                                <p className={`text-3xl font-black ${formData.paymentMedium === 'bkash' ? 'text-pink-700' : 'text-orange-700'
+                                                    }`}>
+                                                    {formData.paymentMedium === 'bkash' ? '01748269350' : '01748269351'}
+                                                </p>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => copyToClipboard(formData.paymentMedium === 'bkash' ? '01748269350' : '01748269351')}
+                                                    className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95 ${formData.paymentMedium === 'bkash'
+                                                            ? 'bg-pink-100 hover:bg-pink-200'
+                                                            : 'bg-orange-100 hover:bg-orange-200'
+                                                        }`}
+                                                    title="নম্বর কপি করুন"
+                                                >
+                                                    <Copy className={`w-6 h-6 ${formData.paymentMedium === 'bkash' ? 'text-pink-700' : 'text-orange-700'
+                                                        }`} />
+                                                </button>
+                                            </div>
+                                            <p className="text-sm text-gray-600 font-medium mt-2">
+                                                এই নম্বরে টাকা পাঠান
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* Transaction ID Input */}
+                                    {formData.paymentMedium && (
+                                        <div>
+                                            <label className="block text-black font-black mb-2 text-lg">
+                                                🧾 ট্রানজেকশন আইডি <span className="text-red-600">*</span>
+                                            </label>
+                                            <p className="text-sm text-gray-700 font-medium mb-3">
+                                                অনুগ্রহ করে {formData.paymentMedium === 'bkash' ? '01748269350' : '01748269351'} নম্বরে টাকা পাঠিয়ে আপনার ট্রানজেকশন আইডি নিচে লিখুন
+                                            </p>
+                                            <input
+                                                type="text"
+                                                value={formData.transactionId}
+                                                onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
+                                                placeholder="ট্রানজেকশন আইডি লিখুন"
+                                                className="w-full px-4 py-4 bg-white border-2 border-gray-500 rounded-xl focus:outline-none focus:border-blue-600 transition-all duration-300 text-lg text-black font-bold placeholder-gray-600"
+                                                required={formData.paymentMethod === 'online'}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* Fee Display */}

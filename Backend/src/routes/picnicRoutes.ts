@@ -10,7 +10,8 @@ import {
     removeExpense,
     getFinancials,
     modifyRegistration,
-    removeRegistration
+    removeRegistration,
+    searchRegistrationsByTransactionId
 } from '../controllers/picnicController';
 import { verifyToken } from '../middleware/authMiddleware';
 
@@ -22,6 +23,7 @@ router.post('/register', registerForPicnic);
 // ==================== PROTECTED ADMIN ROUTES ====================
 // Registrations
 router.get('/registrations', verifyToken, getRegistrations);
+router.get('/registrations/search', verifyToken, searchRegistrationsByTransactionId);
 router.get('/registrations/:id', verifyToken, getRegistrationDetails);
 router.patch('/registrations/:id/payment', verifyToken, markPaymentStatus);
 router.put('/registrations/:id', verifyToken, modifyRegistration);
@@ -37,3 +39,4 @@ router.delete('/expenses/:id', verifyToken, removeExpense);
 router.get('/financials', verifyToken, getFinancials);
 
 export default router;
+

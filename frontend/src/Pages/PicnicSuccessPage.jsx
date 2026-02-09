@@ -145,6 +145,56 @@ const PicnicSuccessPage = () => {
                                         <DollarSign className="w-6 h-6 text-green-800" />
                                     </div>
                                     <div className="flex-1">
+                                        <p className="text-sm text-black font-bold">পেমেন্ট পদ্ধতি</p>
+                                        <p className="text-lg font-black text-black">
+                                            {registration.paymentMethod === 'cash' ? '💵 কমিটিতে নগদ প্রদান' : '💳 অনলাইন পেমেন্ট'}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {registration.paymentMethod === 'online' && (
+                                    <>
+                                        <div className="info-row flex items-center gap-4 p-4 bg-white border border-gray-400 rounded-xl">
+                                            <div className="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                                <Phone className="w-6 h-6 text-blue-800" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <p className="text-sm text-black font-bold">পেমেন্ট মাধ্যম</p>
+                                                <p className="text-lg font-black text-black">
+                                                    {registration.paymentMedium === 'bkash' ? '📱 বিকাশ' : '💳 নগদ'}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="info-row flex items-center gap-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-400 rounded-xl">
+                                            <div className="flex-shrink-0 w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center">
+                                                <CheckCircle className="w-6 h-6 text-blue-800" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <p className="text-sm text-black font-bold">ট্রানজেকশন আইডি</p>
+                                                <p className="text-lg font-black text-blue-700">{registration.transactionId}</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
+
+                                {registration.paymentMethod === 'cash' && (
+                                    <div className="info-row flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-400 rounded-xl">
+                                        <div className="flex-shrink-0 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                                            <CheckCircle className="w-6 h-6 text-gray-700" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <p className="text-sm text-black font-bold">ট্রানজেকশন আইডি</p>
+                                            <p className="text-lg font-black text-gray-600">প্রযোজ্য নয়</p>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="info-row flex items-center gap-4 p-4 bg-white rounded-xl border-2 border-green-500">
+                                    <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                        <DollarSign className="w-6 h-6 text-green-800" />
+                                    </div>
+                                    <div className="flex-1">
                                         <p className="text-sm text-black font-bold">রেজিস্ট্রেশন ফি</p>
                                         <p className="text-2xl font-black text-black">১৫০ টাকা</p>
                                     </div>
