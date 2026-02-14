@@ -86,7 +86,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/iftar_db
 JWT_SECRET=your-super-secret-jwt-key-here
 
 # Server
-PORT=5000
+PORT=4000
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
 
@@ -275,4 +275,4 @@ Information & Communication Engineering
 
 ---
 
-🌸 **আমরা ইফতার পার্টি – ২০২৬ এ আপনাকে স্বাগতম জানাচ্ছি!** 🌿
+ **আমরা ইফতার পার্টি – ২০২৬ এ আপনাকে স্বাগতম জানাচ্ছি!** 🌿

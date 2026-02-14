@@ -169,7 +169,7 @@ export const getFinancialSummary = async () => {
 // ==================== EMAIL TEMPLATES ====================
 
 const sendRegistrationEmail = async (registration: any) => {
-    const fee = registration.paymentMethod === 'online' ? '১০২' : '১০০';
+    const fee = registration.paymentMethod === 'online' ? '102' : '100';
     const html = `<!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -180,7 +180,7 @@ const sendRegistrationEmail = async (registration: any) => {
 <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #10b981 0%, #047857 100%); padding: 40px 20px;">
     <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
         <div style="background: linear-gradient(135deg, #10b981 0%, #047857 100%); padding: 40px; text-align: center;">
-            <h1 style="color: white; margin: 0; font-size: 32px;">🌸 ইফতার পার্টি – ২০২৬ 🌸</h1>
+            <h1 style="color: white; margin: 0; font-size: 32px;"> ইফতার পার্টি – ২০২৬ </h1>
             <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0; font-size: 16px;">ICE Department | Information & Communication Engineering</p>
         </div>
         
@@ -236,7 +236,7 @@ const sendRegistrationEmail = async (registration: any) => {
 </html>`;
 
     try {
-        await sendMail(registration.email, '🌸 ইফতার পার্টি – ২০২৬ | রেজিস্ট্রেশন নিশ্চিতকরণ', html);
+        await sendMail(registration.email, ' ইফতার পার্টি – ২০২৬ | রেজিস্ট্রেশন নিশ্চিতকরণ', html);
     } catch (error) {
         console.error('Error sending registration email:', error);
     }

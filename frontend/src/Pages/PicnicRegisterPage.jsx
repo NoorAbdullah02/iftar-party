@@ -247,7 +247,7 @@ const PicnicRegisterPage = () => {
                                     type="email"
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    placeholder="example@email.com"
+                                    placeholder="noor@email.com"
                                     className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-500 rounded-xl focus:outline-none focus:border-green-800 transition-all duration-300 text-lg text-black font-bold placeholder-gray-600"
                                     required
                                 />
@@ -401,11 +401,11 @@ const PicnicRegisterPage = () => {
                             <p className="text-black text-lg mb-2 font-bold">রেজিস্ট্রেশন ফি</p>
                             <div className="flex flex-col items-center justify-center">
                                 <p className="text-4xl font-black text-black">
-                                    {formData.paymentMethod === 'online' ? '১০২' : '১০০'} টাকা
+                                    {formData.paymentMethod === 'online' ? '102' : '100'} টাকা
                                 </p>
                                 {formData.paymentMethod === 'online' && (
                                     <p className="text-sm text-gray-600 font-medium mt-1">
-                                        (১০০ টাকা ফি + ২ টাকা চার্জ)
+                                        (100 টাকা ফি + 2 টাকা চার্জ)
                                     </p>
                                 )}
                             </div>

@@ -197,7 +197,7 @@ const PicnicSuccessPage = () => {
                                     <div className="flex-1">
                                         <p className="text-sm text-black font-bold">রেজিস্ট্রেশন ফি</p>
                                         <p className="text-2xl font-black text-black">
-                                            {registration.paymentMethod === 'online' ? '১০২' : '১০০'} টাকা
+                                            {registration.paymentMethod === 'online' ? '102' : '100'} টাকা
                                         </p>
                                     </div>
                                 </div>

@@ -16,7 +16,7 @@ import ReportsTab from '../Components/ReportsTab';
 import EditRegistrationModal from '../Components/EditRegistrationModal';
 
 const AdminDashboard = () => {
-    const { isLoggedIn, user } = useAuth();
+    const { isLoggedIn, user, loading: authLoading } = useAuth();
     const navigate = useNavigate();
 
     const [activeTab, setActiveTab] = useState('overview');
@@ -49,12 +49,24 @@ const AdminDashboard = () => {
     const dashboardRef = useRef(null);
 
     useEffect(() => {
+        if (authLoading) return; // Wait for auth check
         if (!isLoggedIn) {
             navigate('/login');
             return;
         }
         fetchData();
-    }, [isLoggedIn, navigate]);
+    }, [isLoggedIn, navigate, authLoading]);
+
+    if (authLoading) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-xl text-black font-bold">যাচাই করা হচ্ছে...</p>
+                </div>
+            </div>
+        );
+    }
 
 
 
@@ -407,7 +419,7 @@ const AdminDashboard = () => {
                                 <p className="text-4xl font-black count-up">৳{financials.totalCollected}</p>
                             </div>
                         </div>
-                        <p className="text-teal-100 text-sm font-medium">{financials.paidUsers} × ১০০ টাকা</p>
+                        <p className="text-teal-100 text-sm font-medium">{financials.paidUsers} × 100 টাকা</p>
                     </div>
 
                     <div className="stat-card bg-orange-600 rounded-2xl p-6 text-white shadow-xl">
