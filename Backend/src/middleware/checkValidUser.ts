@@ -76,19 +76,27 @@ export async function checkValiditi(req: Request, res: Response, next: NextFunct
     }
 
     if (refreshToken) {
+
+        const baseConfig = {
+            httpOnly: true,
+            secure: env.NODE_ENV === 'production',
+            sameSite: (env.NODE_ENV === 'production' ? 'none' : 'lax') as 'none' | 'lax',
+        };
+
         try {
 
             const result = await refressTokens(refreshToken);
 
+            if (!result) {
+                // If refresh failed (invalid token/session), clear cookies and proceed unauthenticated
+                res.clearCookie('accessToken', baseConfig);
+                res.clearCookie('refreshToken', baseConfig);
+                return next();
+            }
+
             const { newAccessToken, newRefreshToken, user: userInfo } = result as any;
 
             (req as any).user = userInfo;
-
-            const baseConfig = {
-                httpOnly: true,
-                secure: env.NODE_ENV === 'production',
-                sameSite: (env.NODE_ENV === 'production' ? 'none' : 'lax') as 'none' | 'lax',
-            }
 
             res.cookie('accessToken', newAccessToken, {
                 ...baseConfig,
@@ -104,8 +112,13 @@ export async function checkValiditi(req: Request, res: Response, next: NextFunct
 
         } catch (error) {
             console.log('Error verifying refresh token:', error);
+            // On unexpected error, also clear cookies to be safe
+            res.clearCookie('accessToken', baseConfig);
+            res.clearCookie('refreshToken', baseConfig);
+            return next();
         }
     }
+
 
     return next();
 

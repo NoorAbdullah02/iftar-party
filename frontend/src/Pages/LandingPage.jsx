@@ -8,13 +8,13 @@ const LandingPage = () => {
     const featuresRef = useRef(null);
 
     const foodMenu = [
-        { name: 'খিচুড়ি', icon: '🍛', description: 'ঐতিহ্যবাহী বাংলা খিচুড়ি' },
-        { name: 'চিকেন রোস্ট', icon: '🍗', description: 'মসলাদার চিকেন রোস্ট' },
-        { name: 'বিফ কারি', icon: '🍖', description: 'সুস্বাদু বিফ কারি' },
-        { name: 'সালাদ', icon: '🥗', description: 'তাজা সবজির সালাদ' },
-        { name: 'ডিম', icon: '🥚', description: 'সিদ্ধ ডিম' },
-        { name: 'ডেজার্ট / মিষ্টি', icon: '🍰', description: 'মিষ্টি জাতীয় খাবার' },
-        { name: 'সফট ড্রিংকস / পানি', icon: '🥤', description: 'পানীয়' }
+        { name: 'Beguni (বেগুনি)', icon: '🍆', description: 'মচমচে সুস্বাদু বেগুনি' },
+        { name: 'Peyaji (পেয়াজি)', icon: '🧅', description: 'গরম গরম পেয়াজি' },
+        { name: 'Chola Bhuna (ছোলা)', icon: '🧆', description: 'স্পেশাল ছোলা ভুনা' },
+        { name: 'Muri (মুড়ি)', icon: '🍚', description: 'দেশি মুড়ি' },
+        { name: 'Jilapi (জিলাপি)', icon: '🥨🍯', description: 'রসে টসটসে জিলাপি' },
+        { name: 'Fresh Fruits (ফলমূল)', icon: '🍎🍌🍉', description: 'তাজা ফলের সমাহার' },
+        { name: 'Matha / Borhani (মাঠা)', icon: '🥛', description: 'ঠান্ডা মাঠা / বোরহানি' }
     ];
 
     const toggleMenu = () => {
@@ -45,7 +45,7 @@ const LandingPage = () => {
                         <div className="bg-emerald-700 text-white px-12 py-6 rounded-2xl shadow-xl transform hover:scale-105 transition-transform duration-300 border-4 border-emerald-500">
                             <p className="text-3xl md:text-4xl font-bold flex items-center justify-center gap-3">
                                 <span>🎫</span>
-                                <span className="text-white">রেজিস্ট্রেশন ফি: ১৫০ টাকা</span>
+                                <span className="text-white">রেজিস্ট্রেশন ফি: ১০০ টাকা</span>
                             </p>
                         </div>
                     </div>

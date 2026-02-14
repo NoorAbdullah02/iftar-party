@@ -106,7 +106,7 @@ export const searchByTransactionId = async (transactionId: string) => {
 
 export const getTotalCollectedAmount = async () => {
     const count = await getPaidRegistrationsCount();
-    return count * 450; // Fixed fee per person
+    return count * 100; // Fixed fee per person
 };
 
 // ==================== EXPENSE QUERIES ====================
@@ -169,6 +169,7 @@ export const getFinancialSummary = async () => {
 // ==================== EMAIL TEMPLATES ====================
 
 const sendRegistrationEmail = async (registration: any) => {
+    const fee = registration.paymentMethod === 'online' ? '১০২' : '১০০';
     const html = `<!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -214,7 +215,7 @@ const sendRegistrationEmail = async (registration: any) => {
                     </tr>
                     <tr>
                         <td style="padding: 10px 0; color: #718096; font-weight: 600;">ফি:</td>
-                        <td style="padding: 10px 0; color: #2d3748; font-weight: 700; font-size: 18px;">১৫০ টাকা</td>
+                        <td style="padding: 10px 0; color: #2d3748; font-weight: 700; font-size: 18px;">${fee} টাকা</td>
                     </tr>
                 </table>
             </div>

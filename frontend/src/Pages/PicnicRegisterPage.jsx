@@ -358,8 +358,8 @@ const PicnicRegisterPage = () => {
                                                     type="button"
                                                     onClick={() => copyToClipboard(formData.paymentMedium === 'bkash' ? '01748269350' : '01748269351')}
                                                     className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95 ${formData.paymentMedium === 'bkash'
-                                                            ? 'bg-pink-100 hover:bg-pink-200'
-                                                            : 'bg-orange-100 hover:bg-orange-200'
+                                                        ? 'bg-pink-100 hover:bg-pink-200'
+                                                        : 'bg-orange-100 hover:bg-orange-200'
                                                         }`}
                                                     title="নম্বর কপি করুন"
                                                 >
@@ -399,7 +399,16 @@ const PicnicRegisterPage = () => {
                         {/* Fee Display */}
                         <div className="bg-gradient-to-r from-emerald-100 to-teal-100 rounded-2xl p-6 text-center">
                             <p className="text-black text-lg mb-2 font-bold">রেজিস্ট্রেশন ফি</p>
-                            <p className="text-4xl font-black text-black">১৫০ টাকা</p>
+                            <div className="flex flex-col items-center justify-center">
+                                <p className="text-4xl font-black text-black">
+                                    {formData.paymentMethod === 'online' ? '১০২' : '১০০'} টাকা
+                                </p>
+                                {formData.paymentMethod === 'online' && (
+                                    <p className="text-sm text-gray-600 font-medium mt-1">
+                                        (১০০ টাকা ফি + ২ টাকা চার্জ)
+                                    </p>
+                                )}
+                            </div>
                         </div>
 
                         {/* Submit Button */}
