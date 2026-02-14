@@ -16,6 +16,15 @@ import jwt from 'jsonwebtoken';
 export const registerUser = async (req: Request, res: Response) => {
     try {
 
+        const totalUsers = await queries.countUsers(); // you implement this
+
+        if (totalUsers >= 3) {
+            return res.status(403).json({
+                message: "Registration limit reached. Only 3 users allowed."
+            });
+        }
+
+
         const validationResult = await RegisterCheckValid.safeParseAsync(req.body);
 
         if (!validationResult.success) {

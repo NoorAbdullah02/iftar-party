@@ -274,6 +274,15 @@ export const insertPasswordResetToken = async (userId: number, token: string) =>
     });
 }
 
+export const countUsers = async () => {
+    const result = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(users);
+
+    return Number(result[0].count || 0);
+};
+
+
 export const findPasswordResetToken = async ({ token, userId }: { token: string; userId: number }) => {
     const [row] = await db.select()
         .from(passwordResetTokenTable)
