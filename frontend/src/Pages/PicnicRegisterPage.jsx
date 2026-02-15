@@ -352,7 +352,7 @@ const PicnicRegisterPage = () => {
                                             <div className="flex items-center justify-center gap-3">
                                                 <p className={`text-3xl font-black ${formData.paymentMedium === 'bkash' ? 'text-pink-700' : 'text-orange-700'
                                                     }`}>
-                                                    {formData.paymentMedium === 'bkash' ? '01748269350' : '01748269351'}
+                                                    {formData.paymentMedium === 'bkash' ? '01748269350' : '01748269350'}
                                                 </p>
                                                 <button
                                                     type="button"
