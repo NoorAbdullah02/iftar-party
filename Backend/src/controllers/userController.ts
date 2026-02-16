@@ -18,7 +18,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
         const totalUsers = await queries.countUsers(); // you implement this
 
-        if (totalUsers >= 3) {
+        if (totalUsers >= 4) {
             return res.status(403).json({
                 message: "Registration limit reached. Only 3 users allowed."
             });
