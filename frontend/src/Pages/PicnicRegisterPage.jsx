@@ -445,4 +445,6 @@ const PicnicRegisterPage = () => {
     );
 };
 
+
+
 export default PicnicRegisterPage;
