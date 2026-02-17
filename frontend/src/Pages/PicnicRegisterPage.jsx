@@ -310,6 +310,27 @@ const PicnicRegisterPage = () => {
                                 </div>
                             </div>
 
+                            {/* Cash Payment Banner - Only shows when cash is selected */}
+                            {formData.paymentMethod === 'cash' && (
+                                <div className="mt-6 p-6 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 rounded-2xl border-2 border-emerald-300 shadow-lg">
+                                    <div className="flex items-start gap-4">
+                                        <div className="flex-shrink-0">
+                                            <div className="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center">
+                                                <span className="text-2xl">💵</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-lg font-black text-emerald-900 mb-2">
+                                                নগদ পেমেন্ট নির্দেশনা
+                                            </h3>
+                                            <p className="text-black font-medium leading-relaxed">
+                                                নগদ পেমেন্ট নির্বাচিত। রেজিস্ট্রেশন শেষে <b>শাফিন Vaiyaaa</b> কাছে সরাসরি টাকা জমা দিন।
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Online Payment Details */}
                             {formData.paymentMethod === 'online' && (
                                 <div className="mt-6 p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl border-2 border-blue-200 space-y-5">
