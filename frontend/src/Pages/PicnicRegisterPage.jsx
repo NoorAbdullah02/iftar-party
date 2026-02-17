@@ -324,7 +324,7 @@ const PicnicRegisterPage = () => {
                                                 নগদ পেমেন্ট নির্দেশনা
                                             </h3>
                                             <p className="text-black font-medium leading-relaxed">
-                                                নগদ পেমেন্ট নির্বাচিত। রেজিস্ট্রেশন শেষে <b>শাফিন Vaiyaaa</b> কাছে সরাসরি টাকা জমা দিন।
+                                                নগদ পেমেন্ট নির্বাচিত। রেজিস্ট্রেশন শেষে শুধুমাত্র <b>শাফিন Vaiyaaar</b> কাছে সরাসরি টাকা জমা দিন।
                                             </p>
                                         </div>
                                     </div>
