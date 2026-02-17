@@ -356,7 +356,7 @@ const PicnicRegisterPage = () => {
                                                 </p>
                                                 <button
                                                     type="button"
-                                                    onClick={() => copyToClipboard(formData.paymentMedium === 'bkash' ? '01748269350' : '01748269351')}
+                                                    onClick={() => copyToClipboard(formData.paymentMedium === 'bkash' ? '01748269350' : '01748269350')}
                                                     className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 active:scale-95 ${formData.paymentMedium === 'bkash'
                                                         ? 'bg-pink-100 hover:bg-pink-200'
                                                         : 'bg-orange-100 hover:bg-orange-200'
@@ -380,7 +380,7 @@ const PicnicRegisterPage = () => {
                                                 🧾 ট্রানজেকশন আইডি <span className="text-red-600">*</span>
                                             </label>
                                             <p className="text-sm text-gray-700 font-medium mb-3">
-                                                অনুগ্রহ করে {formData.paymentMedium === 'bkash' ? '01748269350' : '01748269351'} নম্বরে টাকা পাঠিয়ে আপনার ট্রানজেকশন আইডি নিচে লিখুন
+                                                অনুগ্রহ করে {formData.paymentMedium === 'bkash' ? '01748269350' : '01748269350'} নম্বরে টাকা পাঠিয়ে আপনার ট্রানজেকশন আইডি নিচে লিখুন
                                             </p>
                                             <input
                                                 type="text"
